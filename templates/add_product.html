@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Product</title>
+</head>
+
+<body>
+
+    <h1>Add Product</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Product Name:</label>
+        <input type="text" name="name">
+
+        <br><br>
+
+        <label>Description:</label>
+        <input type="text" name="description">
+
+        <br><br>
+
+        <label>Product Image</label>
+        <input type="file" name="image" required>
+
+        <br><br>
+
+        <label>MRP:</label>
+        <input type="number" step="0.01" name="mrp">
+
+        <br><br>
+
+        <label>Selling Price:</label>
+        <input type="number" step="0.01" name="price">
+
+        <br><br>
+
+        <label>Stock:</label>
+        <input type="number" name="stock">
+
+        <br><br>
+
+        <button type="submit">Add Product</button>
+
+    </form>
+
+</body>
+
+</html>
