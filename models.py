@@ -27,3 +27,12 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
 
     stock = db.Column(db.Integer, nullable=False)
+
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    customer_id = db.Column(db.Integer)
+
+    product_id = db.Column(db.Integer)
+
+    quantity = db.Column(db.Integer)

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session
-from models import db, Customer, Product
+from models import db, Customer, Product, Cart
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
@@ -119,6 +119,77 @@ def products():
     return render_template(
         'products.html',
         products=products
+    )
+
+@app.route('/cart_test')
+def cart_test():
+
+    all_cart_items = Cart.query.all()
+
+    result = ""
+
+    for item in all_cart_items:
+
+        result += f"""
+        Customer ID: {item.customer_id}
+        Product ID: {item.product_id}
+        Quantity: {item.quantity}
+        <br><br>
+        """
+
+    return result
+
+@app.route('/add_to_cart/<int:product_id>')
+def add_to_cart(product_id):
+
+    customer_id = session['customer_id']
+
+    cart_item = Cart.query.filter_by(
+        customer_id=customer_id,
+        product_id=product_id
+    ).first()
+
+    if cart_item:
+
+        cart_item.quantity += 1
+
+    else:
+
+        cart_item = Cart(
+            customer_id=customer_id,
+            product_id=product_id,
+            quantity=1
+        )
+
+        db.session.add(cart_item)
+
+    db.session.commit()
+
+    return "Product Added To Cart"
+
+@app.route('/cart')
+def cart():
+
+    customer_id = session['customer_id']
+
+    cart_items = Cart.query.filter_by(
+        customer_id=customer_id
+    ).all()
+
+    cart_data = []
+
+    for item in cart_items:
+
+        product = Product.query.get(item.product_id)
+
+        cart_data.append({
+            'product': product,
+            'quantity': item.quantity
+        })
+
+    return render_template(
+        'cart.html',
+        cart_data=cart_data
     )
 
 with app.app_context():
