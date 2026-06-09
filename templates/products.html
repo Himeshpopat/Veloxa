@@ -41,9 +41,19 @@
                             Stock: {{ product.stock }}
                         </p>
 
-                        <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary">
-                            Add to Cart
+                        {% if order_id %}
+
+                        <a href="/add_to_order/{{ order_id }}/{{ product.id }}" class="btn btn-success">
+                            Add To Cart
                         </a>
+
+                        {% else %}
+
+                        <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary">
+                            Add To Order
+                        </a>
+
+                        {% endif %}
 
                     </div>
 

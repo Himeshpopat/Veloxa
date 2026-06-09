@@ -1,0 +1,25 @@
+<h2>Order Details</h2>
+
+{% for item in order_data %}
+
+<p>
+    Product: {{ item.product.name }}
+</p>
+
+<p>
+    Price: ₹{{ item.product.price }}
+</p>
+
+<p>
+    Quantity: {{ item.quantity }}
+</p>
+
+<p>
+    Total: {{ item.item_total }}
+</p>
+
+<hr>
+
+{% endfor %}
+
+<h3>Order Total: ₹{{ total }}</h3>

@@ -36,3 +36,19 @@ class Cart(db.Model):
     product_id = db.Column(db.Integer)
 
     quantity = db.Column(db.Integer)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    customer_id = db.Column(db.Integer)
+
+    status = db.Column(db.String(50))
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    order_id = db.Column(db.Integer)
+
+    product_id = db.Column(db.Integer)
+
+    quantity = db.Column(db.Integer)

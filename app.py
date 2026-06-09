@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, session
-from models import db, Customer, Product, Cart
+from flask import Flask, render_template, request, session, redirect
+from models import db, Customer, Product, Cart, Order, OrderItem
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
@@ -114,6 +114,8 @@ def add_product():
 
 @app.route('/products')
 def products():
+    order_id = request.args.get('order_id')
+    
     products = Product.query.all()
 
     return render_template(
@@ -165,7 +167,7 @@ def add_to_cart(product_id):
 
     db.session.commit()
 
-    return "Product Added To Cart"
+    return redirect('/cart')
 
 @app.route('/cart')
 def cart():
@@ -176,11 +178,12 @@ def cart():
         customer_id=customer_id
     ).all()
 
+    total = 0
     cart_data = []
 
     for item in cart_items:
-
         product = Product.query.get(item.product_id)
+        total += product.price * item.quantity
 
         cart_data.append({
             'product': product,
@@ -189,7 +192,294 @@ def cart():
 
     return render_template(
         'cart.html',
-        cart_data=cart_data
+        cart_data=cart_data,
+        total=total
+    )
+
+@app.route('/remove_from_cart/<int:product_id>')
+def remove_from_cart(product_id):
+
+    customer_id = session['customer_id']
+
+    cart_item = Cart.query.filter_by(
+        customer_id=customer_id,
+        product_id=product_id
+    ).first()
+
+    db.session.delete(cart_item)
+    db.session.commit()
+
+    return redirect('/cart')
+
+@app.route('/increase_quantity/<int:product_id>')
+def increase_quantity(product_id):
+
+    customer_id = session['customer_id']
+
+    cart_item = Cart.query.filter_by(
+        customer_id=customer_id,
+        product_id=product_id
+    ).first()
+
+    cart_item.quantity += 1
+
+    db.session.commit()
+
+    return redirect('/cart')
+
+@app.route('/decrease_quantity/<int:product_id>')
+def decrease_quantity(product_id):
+
+    customer_id = session['customer_id']
+
+    cart_item = Cart.query.filter_by(
+        customer_id=customer_id,
+        product_id=product_id
+    ).first()
+
+    cart_item.quantity -= 1
+
+    db.session.commit()
+
+    return redirect('/cart')
+
+@app.route('/place_order')
+def place_order():
+
+    customer_id = session['customer_id']
+
+    order = Order(
+        customer_id=customer_id,
+        status='Pending'
+    )
+
+    db.session.add(order)
+    db.session.commit()
+
+    cart_items = Cart.query.filter_by(
+        customer_id=customer_id
+    ).all()
+
+    for item in cart_items:
+
+        order_item = OrderItem(
+            order_id=order.id,
+            product_id=item.product_id,
+            quantity=item.quantity
+        )
+
+        db.session.add(order_item)
+
+    db.session.commit()
+
+    for item in cart_items:
+        db.session.delete(item)
+
+    db.session.commit()
+
+    return redirect('/cart')
+
+@app.route('/my_orders')
+def my_orders():
+
+    customer_id = session['customer_id']
+
+    orders = Order.query.filter_by(
+        customer_id=customer_id
+    ).all()
+
+    return render_template(
+        'my_orders.html',
+        orders=orders
+    )
+
+@app.route('/order_details/<int:order_id>')
+def order_details(order_id):
+
+    order_items = OrderItem.query.filter_by(
+        order_id=order_id
+    ).all()
+
+    order_data = []
+    total = 0
+
+    for item in order_items:
+
+        product = Product.query.get(item.product_id)
+
+        item_total = product.price * item.quantity
+        total += item_total
+
+        order_data.append({
+            'product': product,
+            'quantity': item.quantity,
+            'item_total': item_total
+        })  
+
+    return render_template(
+        'order_details.html',
+        order_data=order_data,
+        total=total
+    )
+
+@app.route('/admin_orders')
+def admin_orders():
+
+    orders = Order.query.all()
+
+    return render_template(
+        'admin_orders.html',
+        orders=orders
+    )
+
+@app.route('/confirm_order/<int:order_id>')
+def confirm_order(order_id):
+
+    order = Order.query.get(order_id)
+
+    if order.status == 'Pending':
+        order.status = 'Confirmed'
+
+    db.session.commit()
+
+    return redirect('/admin_orders')
+
+@app.route('/cancel_order/<int:order_id>')
+def cancel_order(order_id):
+
+    order = Order.query.get(order_id)
+
+    if order.status == 'Pending':
+        order.status = 'Cancelled'
+        db.session.commit()
+
+    return redirect('/admin_orders')
+
+@app.route('/deliver_order/<int:order_id>')
+def deliver_order(order_id):
+
+    order = Order.query.get(order_id)
+
+    if order.status == 'Confirmed':
+        order.status = 'Delivered'
+
+    db.session.commit()
+
+    return redirect('/admin_orders')
+
+@app.route('/customer_cancel_order/<int:order_id>')
+def customer_cancel_order(order_id):
+
+    customer_id = session['customer_id']
+
+    order = Order.query.get(order_id)
+
+    if order.customer_id == customer_id and order.status == 'Pending':
+        order.status = 'Cancelled'
+        db.session.commit()
+
+    return redirect('/my_orders')
+
+@app.route('/edit_order/<int:order_id>')
+def edit_order(order_id):
+
+    customer_id = session['customer_id']
+
+    order = Order.query.get(order_id)
+
+    if order.customer_id != customer_id:
+        return redirect('/my_orders')
+
+    order_items = OrderItem.query.filter_by(
+        order_id=order_id
+    ).all()
+
+    order_data = []
+
+    for item in order_items:
+
+        product = Product.query.get(item.product_id)
+
+        order_data.append({
+            'product': product,
+            'quantity': item.quantity,
+            'item_id': item.id
+        })
+
+    return render_template(
+        'edit_order.html',
+        order_id=order_id,
+        order_data=order_data
+    )
+
+@app.route('/increase_order_quantity/<int:item_id>')
+def increase_order_quantity(item_id):
+
+    customer_id = session['customer_id']
+    item = OrderItem.query.get(item_id)
+    order = Order.query.get(item.order_id)
+
+    if order.customer_id != customer_id:
+        return redirect('/my_orders')
+
+    item.quantity += 1
+
+    db.session.commit()
+    return redirect(f'/edit_order/{item.order_id}')
+
+@app.route('/decrease_order_quantity/<int:item_id>')
+def decrease_order_quantity(item_id):
+
+    customer_id = session['customer_id']
+    item = OrderItem.query.get(item_id)
+    order = Order.query.get(item.order_id)
+
+    if order.customer_id != customer_id:
+        return redirect('/my_orders')
+
+    if item.quantity > 1:
+        item.quantity -= 1
+
+    db.session.commit()
+
+    return redirect(f'/edit_order/{item.order_id}')
+
+@app.route('/remove_order_item/<int:item_id>')
+def remove_order_item(item_id):
+
+    customer_id = session['customer_id']
+
+    item = OrderItem.query.get(item_id)
+    order_id = item.order_id
+    order = Order.query.get(item.order_id)
+
+    if order.customer_id != customer_id:
+        return redirect('/my_orders')
+
+    db.session.delete(item)
+    db.session.commit()
+
+    remaining_items = OrderItem.query.filter_by(
+    order_id=order_id
+    ).all()
+
+    if len(remaining_items) == 0 :
+        order = Order.query.get(order_id)
+        order.status = 'Cancelled'
+
+    db.session.commit()
+
+    return redirect(f'/edit_order/{order_id}')
+
+@app.route('/add_product_to_order/<int:order_id>')
+def add_product_to_order(order_id):
+
+    products = Product.query.all()
+
+    return render_template(
+        'products.html',
+        products=products,
+        order_id=order_id
     )
 
 with app.app_context():
