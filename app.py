@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect
-from models import db, Customer, Product, Cart, Order, OrderItem
+from models import db, Customer, Product, Cart, Order, OrderItem, Admin
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
@@ -78,6 +78,9 @@ def logout():
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
 
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
     if request.method == 'POST':
 
         name = request.form['name']
@@ -120,7 +123,8 @@ def products():
 
     return render_template(
         'products.html',
-        products=products
+        products=products,
+        order_id=order_id
     )
 
 @app.route('/cart_test')
@@ -322,18 +326,11 @@ def order_details(order_id):
         total=total
     )
 
-@app.route('/admin_orders')
-def admin_orders():
-
-    orders = Order.query.all()
-
-    return render_template(
-        'admin_orders.html',
-        orders=orders
-    )
-
 @app.route('/confirm_order/<int:order_id>')
 def confirm_order(order_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
 
     order = Order.query.get(order_id)
 
@@ -347,6 +344,9 @@ def confirm_order(order_id):
 @app.route('/cancel_order/<int:order_id>')
 def cancel_order(order_id):
 
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
     order = Order.query.get(order_id)
 
     if order.status == 'Pending':
@@ -357,6 +357,9 @@ def cancel_order(order_id):
 
 @app.route('/deliver_order/<int:order_id>')
 def deliver_order(order_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
 
     order = Order.query.get(order_id)
 
@@ -481,6 +484,81 @@ def add_product_to_order(order_id):
         products=products,
         order_id=order_id
     )
+
+@app.route('/add_to_order/<int:order_id>/<int:product_id>')
+def add_to_order(order_id, product_id):
+
+    item = OrderItem.query.filter_by(
+        order_id=order_id,
+        product_id=product_id
+    ).first()
+
+    if item:
+        item.quantity += 1
+
+    else:
+        item = OrderItem(
+            order_id=order_id,
+            product_id=product_id,
+            quantity=1
+        )
+
+        db.session.add(item)
+
+    db.session.commit()
+
+    return redirect(f'/edit_order/{order_id}')
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        admin = Admin.query.filter_by(
+            username=username,
+            password=password
+        ).first()
+
+        if admin:
+            session['admin_id'] = admin.id
+            return redirect('/admin_orders')
+
+    return render_template('admin_login.html')
+
+@app.route('/admin_orders')
+def admin_orders():
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    orders = Order.query.all()
+
+    return render_template(
+        'admin_orders.html',
+        orders=orders
+    )
+
+@app.route('/admin_logout')
+def admin_logout():
+
+    session.pop('admin_id', None)
+
+    return redirect('/admin_login')
+
+@app.route('/create_admin')
+def create_admin():
+
+    admin = Admin(
+        username='admin',
+        password='admin123'
+    )
+
+    db.session.add(admin)
+    db.session.commit()
+
+    return 'Admin Created'
 
 with app.app_context():
     db.create_all()
