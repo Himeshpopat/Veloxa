@@ -119,12 +119,17 @@ def add_product():
 def products():
     order_id = request.args.get('order_id')
     
-    products = Product.query.all()
+    products = Product.query.filter_by(
+    is_active=True
+    ).all()
+
+    admin_logged_in = 'admin_id' in session
 
     return render_template(
         'products.html',
         products=products,
-        order_id=order_id
+        order_id=order_id,
+        admin_logged_in=admin_logged_in
     )
 
 @app.route('/cart_test')
@@ -252,6 +257,17 @@ def place_order():
 
     customer_id = session['customer_id']
 
+    cart_items = Cart.query.filter_by(
+        customer_id=customer_id
+    ).all()
+
+    for item in cart_items:
+
+        product = Product.query.get(item.product_id)
+
+        if not product.is_active:
+            return redirect('/cart')
+
     order = Order(
         customer_id=customer_id,
         status='Pending'
@@ -259,10 +275,6 @@ def place_order():
 
     db.session.add(order)
     db.session.commit()
-
-    cart_items = Cart.query.filter_by(
-        customer_id=customer_id
-    ).all()
 
     for item in cart_items:
 
@@ -281,7 +293,7 @@ def place_order():
 
     db.session.commit()
 
-    return redirect('/cart')
+    return redirect('/my_orders')
 
 @app.route('/my_orders')
 def my_orders():
@@ -546,6 +558,52 @@ def admin_logout():
     session.pop('admin_id', None)
 
     return redirect('/admin_login')
+
+@app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    product = Product.query.get(product_id)
+
+    if request.method == 'POST':
+
+        product.name = request.form['name']
+        product.description = request.form['description']
+        product.mrp = request.form['mrp']
+        product.price = request.form['price']
+        product.stock = request.form['stock']
+
+        image = request.files['image']
+        if image.filename != '':
+            image_name = image.filename
+            image.save(
+                'static/product_images/' + image_name
+            )
+            product.image = image_name
+
+        db.session.commit()
+
+        return redirect('/products')
+
+    return render_template(
+        'add_product.html',
+        product=product
+    )
+
+@app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
+def delete_product(product_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    product = Product.query.get(product_id)
+
+    product.is_active = False
+    db.session.commit()
+
+    return redirect('/products')
 
 @app.route('/create_admin')
 def create_admin():

@@ -12,17 +12,26 @@
     <form method="POST" enctype="multipart/form-data">
 
         <label>Product Name:</label>
-        <input type="text" name="name">
+        <input type="text" name="name" value="{{ product.name if product else '' }}">
 
         <br><br>
 
         <label>Description:</label>
-        <input type="text" name="description">
+        <input type="text" name="description" value="{{ product.description if product else '' }}">
+
+        {% if product %}
+
+        <p>Current Image:</p>
+
+        <img src="/static/product_images/{{ product.image }}" width="150">
 
         <br><br>
 
+        {% endif %}
+
         <label>Product Image</label>
-        <input type="file" name="image" required>
+
+        <input type="file" name="image" class="form-control">
 
         <br><br>
 

@@ -41,6 +41,19 @@
                             Stock: {{ product.stock }}
                         </p>
 
+
+                        {% if admin_logged_in %}
+
+                        <a href="/edit_product/{{ product.id }}" class="btn btn-warning">
+                            Edit
+                        </a>
+
+                        <a href="/delete_product/{{ product.id }}" class="btn btn-danger">
+                            Delete
+                        </a>
+
+                        {% else %}
+
                         {% if order_id %}
 
                         <a href="/add_to_order/{{ order_id }}/{{ product.id }}" class="btn btn-success">
@@ -54,10 +67,7 @@
                         </a>
 
                         {% endif %}
-
-                        <a href="/edit_product/{{ product.id }}" class="btn btn-warning">
-                            Edit
-                        </a>
+                        {% endif %}
 
                     </div>
 

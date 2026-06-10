@@ -28,6 +28,8 @@ class Product(db.Model):
 
     stock = db.Column(db.Integer, nullable=False)
 
+    is_active = db.Column(db.Boolean, default=True)
+
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
