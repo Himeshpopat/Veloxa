@@ -1,25 +1,39 @@
-<h2>Order Details</h2>
+{% extends 'base.html' %}
 
-{% for item in order_data %}
+{% block title %}
+Order Details
+{% endblock %}
 
-<p>
-    Product: {{ item.product.name }}
-</p>
+{% block content %}
 
-<p>
-    Price: ₹{{ item.product.price }}
-</p>
+<div class="container-fluid px-3 mt-4">
 
-<p>
-    Quantity: {{ item.quantity }}
-</p>
+    <h2>Order Details</h2>
 
-<p>
-    Total: {{ item.item_total }}
-</p>
+    {% for item in order_data %}
 
-<hr>
+    <p>
+        Product: {{ item.product.name }}
+    </p>
 
-{% endfor %}
+    <p>
+        Price: ₹{{ item.product.price }}
+    </p>
 
-<h3>Order Total: ₹{{ total }}</h3>
+    <p>
+        Quantity: {{ item.quantity }}
+    </p>
+
+    <p>
+        Total: ₹{{ item.item_total }}
+    </p>
+
+    <hr>
+
+    {% endfor %}
+
+    <h3>Order Total: ₹{{ total }}</h3>
+
+</div>
+
+{% endblock %}

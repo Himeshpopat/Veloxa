@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <h1 class="text-center mb-5">
+            Wholesale Dealer Order Management System
+        </h1>
+
+        <h3 class="text-center mb-4">
+            Admin Dashboard
+        </h3>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <a href="/add_product" class="btn btn-primary w-100 p-4">
+                    Add Product
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <a href="/products" class="btn btn-success w-100 p-4">
+                    Manage Products
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <a href="/admin_orders" class="btn btn-warning w-100 p-4">
+                    Manage Orders
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <a href="/admin_logout" class="btn btn-danger w-100 p-4">
+                    Logout
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

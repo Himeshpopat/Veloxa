@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <title>Add Product</title>
-</head>
+{% block title %}
+Add Product
+{% endblock %}
 
-<body>
+{% block content %}
+
+<div class="container-fluid px-3 mt-4">
 
     <h1>Add Product</h1>
 
@@ -54,6 +55,6 @@
 
     </form>
 
-</body>
+</div>
 
-</html>
+{% endblock %}

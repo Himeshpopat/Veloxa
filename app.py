@@ -119,9 +119,13 @@ def add_product():
 def products():
     order_id = request.args.get('order_id')
     
-    products = Product.query.filter_by(
-    is_active=True
-    ).all()
+    if 'admin_id' in session:
+        products = Product.query.all()
+
+    else:
+        products = Product.query.filter_by(
+          is_active=True
+        ).all()
 
     admin_logged_in = 'admin_id' in session
 
@@ -535,7 +539,7 @@ def admin_login():
 
         if admin:
             session['admin_id'] = admin.id
-            return redirect('/admin_orders')
+            return redirect('/admin_dashboard')
 
     return render_template('admin_login.html')
 
@@ -604,6 +608,27 @@ def delete_product(product_id):
     db.session.commit()
 
     return redirect('/products')
+
+@app.route('/restore_product/<int:product_id>')
+def restore_product(product_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    product = Product.query.get_or_404(product_id)
+
+    product.is_active = True
+    db.session.commit()
+
+    return redirect('/products')
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    return render_template('admin_dashboard.html')
 
 @app.route('/create_admin')
 def create_admin():
