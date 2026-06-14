@@ -6,89 +6,119 @@ Products
 
 {% block content %}
 
-    <div class="container mt-4">
+<div class="container mt-4">
 
-        <h1 class="mb-4">Products</h1>
+    <h1 class="mb-4">Products</h1>
 
-        <div class="row">
+    <form method="GET" action="/products" class="mb-4">
 
-            {% for product in products %}
+        <div class="input-group">
 
-            <div class="col-md-4 mb-4">
+            <input type="text" name="search" class="form-control" placeholder="Search products..."
+                value="{{ request.args.get('search', '') }}">
 
-                <div class="card h-100">
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
 
-                    <img src="/static/product_images/{{ product.image }}" class="card-img-top" height="250">
+        </div>
 
-                    <div class="card-body">
+    </form>
 
-                        <h5 class="card-title">
-                            {{ product.name }}
-                        </h5>
+    {% if products %}
 
-                        <p class="card-text">
-                            {{ product.description }}
-                        </p>
+    <div class="row">
 
-                        <p>
-                            Price: ₹{{ product.price }}
-                        </p>
+        {% for product in products %}
 
-                        <p>
-                            Stock: {{ product.stock }}
-                        </p>
+        <div class="col-md-4 mb-4">
 
+            <div class="card h-100">
 
-                        {% if 'admin_id' in session %}
+                <img src="/static/product_images/{{ product.image }}" class="card-img-top" height="250">
 
-                        <a href="/edit_product/{{ product.id }}" class="btn btn-warning">
-                            Edit
-                        </a>
+                <div class="card-body">
 
-                        {% if product.is_active %}
+                    <h5 class="card-title">
+                        {{ product.name }}
+                    </h5>
 
-                        <a href="/delete_product/{{ product.id }}" class="btn btn-danger">
-                            Delete
-                        </a>
+                    <p class="card-text">
+                        {{ product.description }}
+                    </p>
 
-                        {% else %}
+                    <p>
+                        Price: ₹{{ "%.2f"|format(product.price) }}
+                    </p>
 
-                        <a href="/restore_product/{{ product.id }}" class="btn btn-success">
-                            Restore
-                        </a>
+                    <p>
+                        Stock: {{ product.stock }}
+                    </p>
 
-                        {% endif %}
+                    {% if 'admin_id' in session %}
 
-                        {% endif %}
+                    <a href="/edit_product/{{ product.id }}" class="btn btn-warning">
+                        Edit
+                    </a>
 
-                        {% if 'admin_id' not in session %}
+                    {% if product.is_active %}
 
-                        {% if order_id %}
+                    <a href="/delete_product/{{ product.id }}" class="btn btn-danger">
+                        Delete
+                    </a>
 
-                        <a href="/add_to_order/{{ order_id }}/{{ product.id }}" class="btn btn-success">
-                            Add To Order
-                        </a>
+                    {% else %}
 
-                        {% else %}
+                    <a href="/restore_product/{{ product.id }}" class="btn btn-success">
+                        Restore
+                    </a>
 
-                        <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary">
-                            Add To Cart
-                        </a>
+                    {% endif %}
 
-                        {% endif %}
+                    {% endif %}
 
-                        {% endif %}
+                    {% if 'admin_id' not in session %}
 
-                    </div>
+                    {% if order_id %}
+
+                    <a href="/add_to_order/{{ order_id }}/{{ product.id }}" class="btn btn-success">
+                        Add To Order
+                    </a>
+
+                    {% else %}
+
+                    <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary">
+                        Add To Cart
+                    </a>
+
+                    {% endif %}
+
+                    {% endif %}
 
                 </div>
 
             </div>
 
-            {% endfor %}
-
         </div>
 
+        {% endfor %}
+
     </div>
+
+    {% else %}
+
+    <div class="text-center mt-5">
+
+        <h3>No Products Available</h3>
+
+        <p class="text-muted">
+            Products will appear here when the admin adds them.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

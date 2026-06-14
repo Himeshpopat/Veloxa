@@ -6,47 +6,104 @@ Admin Orders
 
 {% block content %}
 
-<div class="container-fluid px-3 mt-4">
+<div class="container mt-4">
 
-    <h2>All Orders</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    {% for order in orders %}
+        <h2 class="mb-0">Orders</h2>
 
-    <p>
-        Order ID: {{ order.id }}
-    </p>
+        {% if orders %}
+        <span class="text-muted">
+            {{ orders|length }} Order{% if orders|length != 1 %}s{% endif %}
+        </span>
+        {% endif %}
 
-    <p>
-        Customer ID: {{ order.customer_id }}
-    </p>
+    </div>
 
-    <p>
-        Status: {{ order.status }}
-    </p>
+    {% if orders %}
 
-    {% if order.status == 'Pending' %}
+    <div class="orders-grid">
 
-    <a href="/confirm_order/{{ order.id }}" class="btn btn-success">
-        Confirm Order
-    </a>
+        {% for order in orders %}
 
-    <a href="/cancel_order/{{ order.id }}" class="btn btn-danger">
-        Cancel Order
-    </a>
+        <div class="order-card">
+
+            <div class="order-header">
+
+                <h5 class="mb-0">
+                    Order #{{ order.id }}
+                </h5>
+
+                {% if order.status == 'Pending' %}
+                <span class="status-badge pending">Pending</span>
+
+                {% elif order.status == 'Confirmed' %}
+                <span class="status-badge confirmed">Confirmed</span>
+
+                {% elif order.status == 'Delivered' %}
+                <span class="status-badge delivered">Delivered</span>
+
+                {% elif order.status == 'Cancelled' %}
+                <span class="status-badge cancelled">Cancelled</span>
+                {% endif %}
+
+            </div>
+
+            <div class="order-body">
+
+                <p class="text-muted mb-3">
+                    Customer ID: {{ order.customer_id }}
+                </p>
+
+                <div class="order-actions">
+
+                    <a href="/order_details/{{ order.id }}" class="btn btn-outline-secondary btn-sm">
+                        View Details
+                    </a>
+
+                    {% if order.status == 'Pending' %}
+
+                    <a href="/confirm_order/{{ order.id }}" class="btn btn-success btn-sm">
+                        Confirm
+                    </a>
+
+                    <a href="/cancel_order/{{ order.id }}" class="btn btn-danger btn-sm">
+                        Cancel
+                    </a>
+
+                    {% endif %}
+
+                    {% if order.status == 'Confirmed' %}
+
+                    <a href="/deliver_order/{{ order.id }}" class="btn btn-primary btn-sm">
+                        Deliver
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="text-center mt-5">
+
+        <h3>No Orders Available</h3>
+
+        <p class="text-muted">
+            Orders will appear here when customers place them.
+        </p>
+
+    </div>
 
     {% endif %}
-
-    {% if order.status == 'Confirmed' %}
-
-    <a href="/deliver_order/{{ order.id }}" class="btn btn-primary">
-        Deliver Order
-    </a>
-
-    {% endif %}
-
-    <hr>
-
-    {% endfor %}
 
 </div>
 

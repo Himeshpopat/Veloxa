@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from models import db, Customer, Product, Cart, Order, OrderItem, Admin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
@@ -20,7 +21,7 @@ def login():
 
         customer = Customer.query.filter_by(email=email).first()
 
-        if customer and customer.password == password:
+        if customer and check_password_hash(customer.password,password):
             session['customer_id'] = customer.id
             return render_template('dashboard.html')
         return "Invalid Email or Password"
@@ -39,7 +40,7 @@ def register():
         customer = Customer(
             name=name,
             email=email,
-            password=password
+            password=generate_password_hash(password)
         )
 
         db.session.add(customer)
@@ -118,13 +119,17 @@ def add_product():
 @app.route('/products')
 def products():
     order_id = request.args.get('order_id')
+    search = request.args.get('search', '')
     
     if 'admin_id' in session:
-        products = Product.query.all()
+        products = Product.query.filter(
+            Product.name.contains(search)
+        ).all()
 
     else:
-        products = Product.query.filter_by(
-          is_active=True
+        products = Product.query.filter(
+            Product.is_active == True,
+            Product.name.contains(search)
         ).all()
 
     admin_logged_in = 'admin_id' in session
@@ -158,6 +163,7 @@ def cart_test():
 def add_to_cart(product_id):
 
     customer_id = session['customer_id']
+    product = Product.query.get(product_id)
 
     cart_item = Cart.query.filter_by(
         customer_id=customer_id,
@@ -165,21 +171,20 @@ def add_to_cart(product_id):
     ).first()
 
     if cart_item:
-
-        cart_item.quantity += 1
+        if cart_item.quantity < product.stock:
+            cart_item.quantity += 1
 
     else:
+        if product.stock > 0:
+            cart_item = Cart(
+                customer_id=customer_id,
+                product_id=product_id,
+                quantity=1
+            )
 
-        cart_item = Cart(
-            customer_id=customer_id,
-            product_id=product_id,
-            quantity=1
-        )
-
-        db.session.add(cart_item)
+            db.session.add(cart_item)
 
     db.session.commit()
-
     return redirect('/cart')
 
 @app.route('/cart')
@@ -228,13 +233,17 @@ def remove_from_cart(product_id):
 def increase_quantity(product_id):
 
     customer_id = session['customer_id']
+    product = Product.query.get(product_id)
 
     cart_item = Cart.query.filter_by(
         customer_id=customer_id,
         product_id=product_id
     ).first()
 
-    cart_item.quantity += 1
+    if cart_item and product.stock > cart_item.quantity:
+        cart_item.quantity += 1
+    else:
+        flash(f'Only {product.stock} units available in stock.')
 
     db.session.commit()
 
@@ -270,6 +279,11 @@ def place_order():
         product = Product.query.get(item.product_id)
 
         if not product.is_active:
+            flash(f'{product.name} is no longer available.')
+            return redirect('/cart')
+
+        if item.quantity > product.stock:
+            flash(f'Only {product.stock} units of {product.name} are available.')
             return redirect('/cart')
 
     order = Order(
@@ -316,6 +330,15 @@ def my_orders():
 @app.route('/order_details/<int:order_id>')
 def order_details(order_id):
 
+    order = Order.query.get(order_id)
+
+    if 'admin_id' not in session:
+
+        customer_id = session['customer_id']
+
+        if order.customer_id != customer_id:
+            return redirect('/my_orders')
+
     order_items = OrderItem.query.filter_by(
         order_id=order_id
     ).all()
@@ -334,7 +357,7 @@ def order_details(order_id):
             'product': product,
             'quantity': item.quantity,
             'item_total': item_total
-        })  
+        })
 
     return render_template(
         'order_details.html',
@@ -351,10 +374,23 @@ def confirm_order(order_id):
     order = Order.query.get(order_id)
 
     if order.status == 'Pending':
+        order_items = OrderItem.query.filter_by(
+            order_id=order.id
+        ).all()
+
+        for item in order_items:
+            product = Product.query.get(item.product_id)
+            if product.stock < item.quantity:
+                flash(f'Insufficient stock for {product.name}.')
+                return redirect('/admin_orders')
+
+        for item in order_items:
+            product = Product.query.get(item.product_id)
+            product.stock -= item.quantity
+
         order.status = 'Confirmed'
 
     db.session.commit()
-
     return redirect('/admin_orders')
 
 @app.route('/cancel_order/<int:order_id>')
@@ -435,13 +471,18 @@ def edit_order(order_id):
 def increase_order_quantity(item_id):
 
     customer_id = session['customer_id']
+
     item = OrderItem.query.get(item_id)
     order = Order.query.get(item.order_id)
+    product = Product.query.get(item.product_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
 
-    item.quantity += 1
+    if product.stock > item.quantity:
+        item.quantity += 1
+    else:
+        flash(f'Only {product.stock} units available in stock.')
 
     db.session.commit()
     return redirect(f'/edit_order/{item.order_id}')
@@ -504,22 +545,31 @@ def add_product_to_order(order_id):
 @app.route('/add_to_order/<int:order_id>/<int:product_id>')
 def add_to_order(order_id, product_id):
 
+    product = Product.query.get(product_id)
+
     item = OrderItem.query.filter_by(
         order_id=order_id,
         product_id=product_id
     ).first()
 
     if item:
-        item.quantity += 1
+        if item.quantity < product.stock:
+            item.quantity += 1
+        else:
+            flash(f'Only {product.stock} units available in stock.')
 
     else:
-        item = OrderItem(
-            order_id=order_id,
-            product_id=product_id,
-            quantity=1
-        )
 
-        db.session.add(item)
+        if product.stock > 0:
+            item = OrderItem(
+                order_id=order_id,
+                product_id=product_id,
+                quantity=1
+            )
+            db.session.add(item)
+
+        else:
+            flash('Product is out of stock.')
 
     db.session.commit()
 

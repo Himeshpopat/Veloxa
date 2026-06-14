@@ -28,12 +28,12 @@ Edit Order
         Quantity: {{ item.quantity }}
     </p>
 
-    <a href="/increase_order_quantity/{{ item.item_id }}" class="btn btn-success">
-        +
-    </a>
-
     <a href="/decrease_order_quantity/{{ item.item_id }}" class="btn btn-danger">
         -
+    </a>
+
+    <a href="/increase_order_quantity/{{ item.item_id }}" class="btn btn-success">
+        +
     </a>
 
     <a href="/remove_order_item/{{ item.item_id }}" class="btn btn-dark">

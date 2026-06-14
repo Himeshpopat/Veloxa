@@ -25,14 +25,14 @@ Order Details
     </p>
 
     <p>
-        Total: ₹{{ item.item_total }}
+        Total: ₹{{ "%.2f"|format(item.item_total) }}
     </p>
 
     <hr>
 
     {% endfor %}
 
-    <h3>Order Total: ₹{{ total }}</h3>
+    <h3>Order Total: ₹{{ "%.2f"|format(total) }}</h3>
 
 </div>
 

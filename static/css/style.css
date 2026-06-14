@@ -1,0 +1,83 @@
+/* Admin Dashboard */
+.dashboard-card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-icon {
+    font-size: 3rem;
+}
+
+/* Admin Orders */
+
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.order-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.order-header {
+    padding: 15px;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-body {
+    padding: 15px;
+}
+
+.order-actions {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.confirmed {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.delivered {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.cancelled {
+    background: #f8d7da;
+    color: #842029;
+}
