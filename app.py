@@ -23,7 +23,7 @@ def login():
 
         if customer and check_password_hash(customer.password,password):
             session['customer_id'] = customer.id
-            return render_template('dashboard.html')
+            return redirect('/dashboard')
         return "Invalid Email or Password"
 
     return render_template('login.html')
@@ -64,10 +64,45 @@ def customers():
 
 @app.route('/dashboard')
 def dashboard():
-    if 'customer_id' not in session:
-        return render_template('login.html')
 
-    return render_template('dashboard.html')
+    if 'customer_id' not in session:
+        return redirect('/login')
+
+    customer_id = session['customer_id']
+
+    customer = Customer.query.get(customer_id)
+
+    total_orders = Order.query.filter_by(
+        customer_id=customer_id
+    ).count()
+
+    pending_orders = Order.query.filter_by(
+        customer_id=customer_id,
+        status='Pending'
+    ).count()
+
+    delivered_orders = Order.query.filter_by(
+        customer_id=customer_id,
+        status='Delivered'
+    ).count()
+
+    cart_count = Cart.query.filter_by(
+        customer_id=customer_id
+    ).count()
+
+    recent_orders = Order.query.filter_by(
+        customer_id=customer_id
+    ).order_by(Order.id.desc()).limit(5).all()
+
+    return render_template(
+        'dashboard.html',
+        customer=customer,
+        total_orders=total_orders,
+        pending_orders=pending_orders,
+        delivered_orders=delivered_orders,
+        cart_count=cart_count,
+        recent_orders=recent_orders
+    )
 
 @app.route('/logout')
 def logout():

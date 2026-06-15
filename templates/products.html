@@ -8,7 +8,12 @@ Products
 
 <div class="container mt-4">
 
-    <h1 class="mb-4">Products</h1>
+    <h2 class="mb-3">
+        Products
+        <span class="text-muted fs-5">
+            ({{ products|length }} items)
+        </span>
+    </h2>
 
     <form method="GET" action="/products" class="mb-4">
 
@@ -33,9 +38,9 @@ Products
 
         <div class="col-md-4 mb-4">
 
-            <div class="card h-100">
+            <div class="card product-card h-100">
 
-                <img src="/static/product_images/{{ product.image }}" class="card-img-top" height="250">
+                <img src="/static/product_images/{{ product.image }}" class="card-img-top product-image">
 
                 <div class="card-body">
 
@@ -43,16 +48,26 @@ Products
                         {{ product.name }}
                     </h5>
 
-                    <p class="card-text">
+                    <p class="product-description">
                         {{ product.description }}
                     </p>
 
-                    <p>
-                        Price: ₹{{ "%.2f"|format(product.price) }}
-                    </p>
+                    <div class="price-row">
 
-                    <p>
-                        Stock: {{ product.stock }}
+                        <span class="product-mrp">
+                            MRP: ₹{{ "%.2f"|format(product.mrp) }}
+                        </span>
+
+                        {% if product.mrp > 0 %}
+                        <span class="discount-badge">
+                            {{ ((product.mrp - product.price) / product.mrp * 100) | int }}% OFF
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                    <p class="product-price">
+                        Wholesale Price: ₹{{ "%.2f"|format(product.price) }}
                     </p>
 
                     {% if 'admin_id' in session %}
@@ -87,7 +102,7 @@ Products
 
                     {% else %}
 
-                    <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary">
+                    <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary add-cart-btn">
                         Add To Cart
                     </a>
 

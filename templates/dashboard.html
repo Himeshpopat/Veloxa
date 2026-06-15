@@ -1,13 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>Customer Dashboard</h1>
+{% block title %}
+Customer Dashboard
+{% endblock %}
 
-    <p>Welcome to the Wholesale Dealer Order Management System.</p>
+{% block content %}
 
-</body>
-</html>
+<div class="customer-hero">
+
+    <h1>Welcome, {{ customer.name }}</h1>
+
+    <p class="hero-subtitle">
+        Manage your orders, cart and products from one place.
+    </p>
+
+
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card orders-card">
+        <div class="stat-icon">📋</div>
+        <h2>{{ total_orders }}</h2>
+        <p>Total Orders</p>
+    </div>
+
+    <div class="stat-card pending-card">
+        <div class="stat-icon">⏳</div>
+        <h2>{{ pending_orders }}</h2>
+        <p>Pending Orders</p>
+    </div>
+
+    <div class="stat-card cart-card">
+        <div class="stat-icon">🛒</div>
+        <h2>{{ cart_count }}</h2>
+        <p>Cart Items</p>
+    </div>
+
+    <div class="stat-card delivered-card">
+        <div class="stat-icon">✅</div>
+        <h2>{{ delivered_orders }}</h2>
+        <p>Delivered Orders</p>
+    </div>
+
+</div>
+
+<div class="dashboard-features">
+
+    <div class="dashboard-feature-card">
+
+        <div class="feature-icon">📦</div>
+
+        <h3>Products</h3>
+
+        <p>Browse available products.</p>
+
+        <a href="/products" class="btn btn-primary">
+            View Products
+        </a>
+
+    </div>
+
+    <div class="dashboard-feature-card">
+
+        <div class="feature-icon">🛒</div>
+
+        <h3>Cart</h3>
+
+        <p>Manage selected products.</p>
+
+        <a href="/cart" class="btn btn-primary">
+            Open Cart
+        </a>
+
+    </div>
+
+    <div class="dashboard-feature-card">
+
+        <div class="feature-icon">📋</div>
+
+        <h3>Orders</h3>
+
+        <p>Track all placed orders.</p>
+
+        <a href="/my_orders" class="btn btn-primary">
+            View Orders
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}
