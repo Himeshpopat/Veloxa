@@ -1,19 +1,143 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
-    <title>Wholesale Order System</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Wholesale Dealer Order Management System</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
 <body>
 
-    <h1>Wholesale Dealer Order Management System</h1>
+<section class="hero-section">
 
-    <p>This system helps customers place wholesale orders online.</p>
+<div class="container">
 
-    <button>Login</button>
+    <div class="row align-items-center">
 
-    <br><br>
+        <div class="col-lg-6">
 
-    <a href="/login">Go to Login Page</a>
+            <span class="hero-badge">
+                Wholesale Business Solution
+            </span>
+
+            <h1 class="hero-title">
+                Wholesale Dealer Order Management System
+            </h1>
+
+            <p class="hero-description">
+
+                Manage wholesale orders, track deliveries,
+                monitor inventory, and streamline order processing
+                through one simple platform.
+
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/register"
+                   class="btn btn-success btn-lg">
+                    Register Now
+                </a>
+
+                <a href="/login"
+                   class="btn btn-outline-dark btn-lg">
+                    Customer Login
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat-box">
+                    <h3>100%</h3>
+                    <p>Order Tracking</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>24/7</h3>
+                    <p>Access</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Fast</h3>
+                    <p>Processing</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="hero-card">
+
+                <h3 class="mb-4">
+                    Why Choose WOMS?
+                </h3>
+
+                <div class="feature-item">
+                    <span>✓</span>
+                    <div>
+                        <h5>Easy Product Ordering</h5>
+                        <p>Browse products and place wholesale orders quickly.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>✓</span>
+                    <div>
+                        <h5>Track Order Status</h5>
+                        <p>Monitor Pending, Confirmed and Delivered orders.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>✓</span>
+                    <div>
+                        <h5>Inventory Management</h5>
+                        <p>Real-time stock updates for efficient order handling.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>✓</span>
+                    <div>
+                        <h5>Wholesale Pricing</h5>
+                        <p>Designed specifically for dealer and bulk purchases.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+
+                    <a href="/admin_login"
+                       class="btn btn-dark w-100">
+                        Admin Login
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>  
+
+</section>
 
 </body>
 </html>

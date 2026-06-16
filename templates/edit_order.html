@@ -6,47 +6,94 @@ Edit Order
 
 {% block content %}
 
-<div class="container-fluid px-3 mt-4">
+<div class="container mt-4">
 
-    <h2>Edit Order</h2>
+    <div class="edit-order-header">
 
-    <div class="mb-3">
+        <h2 class = "cart-heading">
+            Edit Order
+
+            <span class="text-muted fs-5">
+                ({{ order_data|length }} items)
+            </span>
+        </h2>
+
         <a href="/products?order_id={{ order_id }}" class="btn btn-primary">
             Add Products
         </a>
-    </div>
 
-    <hr>
+    </div>
 
     {% for item in order_data %}
 
-    <p>
-        Product: {{ item.product.name }}
-    </p>
+    <div class="cart-card">
 
-    <p>
-        Quantity: {{ item.quantity }}
-    </p>
+        <img src="/static/product_images/{{ item.product.image }}" class="cart-product-image">
 
-    <a href="/decrease_order_quantity/{{ item.item_id }}" class="btn btn-danger">
-        -
-    </a>
+        <div class="cart-details">
 
-    <a href="/increase_order_quantity/{{ item.item_id }}" class="btn btn-success">
-        +
-    </a>
+            <h5>{{ item.product.name }}</h5>
 
-    <a href="/remove_order_item/{{ item.item_id }}" class="btn btn-dark">
-        Remove
-    </a>
+            <p class="cart-price">
+                ₹{{ "%.2f"|format(item.product.price) }}
+            </p>
 
-    <hr>
+            <p class="cart-subtotal">
+                Subtotal:
+                ₹{{ "%.2f"|format(item.product.price * item.quantity) }}
+            </p>
+
+        </div>
+
+        <div class="cart-actions">
+
+            <div class="quantity-box">
+
+                <a href="/decrease_order_quantity/{{ item.item_id }}" class="qty-btn">
+                    −
+                </a>
+
+                <span class="qty-value">
+                    {{ item.quantity }}
+                </span>
+
+                <a href="/increase_order_quantity/{{ item.item_id }}" class="qty-btn">
+                    +
+                </a>
+
+            </div>
+
+            <a href="/remove_order_item/{{ item.item_id }}" class="remove-btn">
+                Remove
+            </a>
+
+        </div>
+
+    </div>
 
     {% endfor %}
 
-    <a href="/my_orders" class="btn btn-primary">
-        Save Changes
-    </a>
+    <div class="cart-summary">
+
+        <div class="summary-info">
+
+            <p class="summary-heading">
+                Order Total
+            </p>
+
+            <p class="summary-total">
+                ₹{{ "%.2f"|format(total) }}
+            </p>
+
+        </div>
+
+        <a href="/my_orders" class="btn btn-success place-order-btn">
+
+            Save Changes
+
+        </a>
+
+    </div>
 
 </div>
 

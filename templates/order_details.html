@@ -6,33 +6,71 @@ Order Details
 
 {% block content %}
 
-<div class="container-fluid px-3 mt-4">
+<div class="container mt-4">
 
-    <h2>Order Details</h2>
+    <div class="order-details-header">
 
-    {% for item in order_data %}
+        <h2 class="order-page-title">
+            Order Details
 
-    <p>
-        Product: {{ item.product.name }}
-    </p>
+            <span class="order-count">
+                ({{ order_data|length }} Items)
+            </span>
+        </h2>
 
-    <p>
-        Price: ₹{{ item.product.price }}
-    </p>
+        <div class="order-total-box">
 
-    <p>
-        Quantity: {{ item.quantity }}
-    </p>
+            <span class="order-total-label">
+                Order Total
+            </span>
 
-    <p>
-        Total: ₹{{ "%.2f"|format(item.item_total) }}
-    </p>
+            <span class="order-total-value">
+                ₹{{ "%.2f"|format(total) }}
+            </span>
 
-    <hr>
+        </div>
 
-    {% endfor %}
+    </div>
 
-    <h3>Order Total: ₹{{ "%.2f"|format(total) }}</h3>
+    <div class="order-items-grid">
+
+        {% for item in order_data %}
+
+        <div class="order-item-card">
+
+            <img src="/static/product_images/{{ item.product.image }}" class="order-item-image">
+
+            <div class="order-item-details">
+
+                <h5>
+                    {{ item.product.name }}
+                </h5>
+
+                <p class="order-price">
+                    Wholesale Price:
+                    ₹{{ "%.2f"|format(item.product.price) }}
+                </p>
+
+                <div class="order-meta">
+
+                    <span class="qty-badge">
+                        Qty: {{ item.quantity }}
+                    </span>
+
+                    <span class="subtotal-badge">
+                        Subtotal:
+                        ₹{{ "%.2f"|format(item.item_total) }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </div>
 

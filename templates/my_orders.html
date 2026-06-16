@@ -6,39 +6,148 @@ My Orders
 
 {% block content %}
 
-<div class="container-fluid px-3 mt-4">
+<div class="container mt-4">
 
-    <h2>My Orders</h2>
+    <h2 class="orders-title">
+        My Orders
+        <span class="orders-count">
+            ({{ orders|length }} Orders)
+        </span>
+    </h2>
 
     {% if orders %}
 
-    {% for order in orders %}
+    <div class="orders-grid">
 
-    <p>
-        <a href="/order_details/{{ order.id }}">
-            Order ID: {{ order.id }}
-        </a>
-    </p>
+        {% for order in orders %}
 
-    <p>
-        Status: {{ order.status }}
-    </p>
+        <div class="customer-order-card">
 
-    {% if order.status == 'Pending' %}
+            <div class="customer-order-header">
 
-    <a href="/edit_order/{{ order.id }}" class="btn btn-success">
-        Edit Order
-    </a>
+                <h5>
+                    Order #{{ order.id }}
+                </h5>
 
-    <a href="/customer_cancel_order/{{ order.id }}" class="btn btn-danger">
-        Cancel Order
-    </a>
+                {% if order.status == 'Pending' %}
 
-    {% endif %}
+                <span class="order-status pending-status">
+                    Pending
+                </span>
 
-    <hr>
+                {% elif order.status == 'Confirmed' %}
 
-    {% endfor %}
+                <span class="order-status confirmed-status">
+                    Confirmed
+                </span>
+
+                {% elif order.status == 'Delivered' %}
+
+                <span class="order-status delivered-status">
+                    Delivered
+                </span>
+
+                {% else %}
+
+                <span class="order-status cancelled-status">
+                    Cancelled
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            <div class="customer-order-body">
+
+                <p class="order-text">
+                    Track and manage your order.
+                </p>
+
+            </div>
+
+            <div class="customer-order-actions">
+
+                <a href="/order_details/{{ order.id }}"
+                   class="btn btn-primary">
+                    View Details
+                </a>
+
+                {% if order.status == 'Pending' %}
+
+                <a href="/edit_order/{{ order.id }}"
+                   class="btn btn-success">
+                    Edit Order
+                </a>
+
+                <button
+                    class="btn btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cancelModal{{ order.id }}">
+                    Cancel
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% if order.status == 'Pending' %}
+
+        <div class="modal fade"
+             id="cancelModal{{ order.id }}"
+             tabindex="-1">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Cancel Order
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        Are you sure you want to cancel
+                        Order #{{ order.id }}?
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            No
+                        </button>
+
+                        <a href="/customer_cancel_order/{{ order.id }}"
+                           class="btn btn-danger">
+                            Yes, Cancel
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
+
+    </div>
 
     {% else %}
 
@@ -51,7 +160,7 @@ My Orders
         </p>
 
         <a href="/products" class="btn btn-primary">
-            Start Shopping
+            Browse Products
         </a>
 
     </div>

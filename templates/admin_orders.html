@@ -8,17 +8,12 @@ Admin Orders
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2 class="mb-0">Orders</h2>
-
-        {% if orders %}
-        <span class="text-muted">
-            {{ orders|length }} Order{% if orders|length != 1 %}s{% endif %}
+    <h2 class="orders-title">
+        Admin Orders
+        <span class="orders-count">
+            ({{ orders|length }} Orders)
         </span>
-        {% endif %}
-
-    </div>
+    </h2>
 
     {% if orders %}
 
@@ -26,66 +21,235 @@ Admin Orders
 
         {% for order in orders %}
 
-        <div class="order-card">
+        <div class="customer-order-card">
 
-            <div class="order-header">
+            <div class="customer-order-header">
 
-                <h5 class="mb-0">
+                <h5>
                     Order #{{ order.id }}
                 </h5>
 
                 {% if order.status == 'Pending' %}
-                <span class="status-badge pending">Pending</span>
+
+                <span class="order-status pending-status">
+                    Pending
+                </span>
 
                 {% elif order.status == 'Confirmed' %}
-                <span class="status-badge confirmed">Confirmed</span>
+
+                <span class="order-status confirmed-status">
+                    Confirmed
+                </span>
 
                 {% elif order.status == 'Delivered' %}
-                <span class="status-badge delivered">Delivered</span>
 
-                {% elif order.status == 'Cancelled' %}
-                <span class="status-badge cancelled">Cancelled</span>
+                <span class="order-status delivered-status">
+                    Delivered
+                </span>
+
+                {% else %}
+
+                <span class="order-status cancelled-status">
+                    Cancelled
+                </span>
+
                 {% endif %}
 
             </div>
 
-            <div class="order-body">
+            <div class="customer-order-body">
 
-                <p class="text-muted mb-3">
+                <p class="order-text">
                     Customer ID: {{ order.customer_id }}
                 </p>
 
-                <div class="order-actions">
+            </div>
 
-                    <a href="/order_details/{{ order.id }}" class="btn btn-outline-secondary btn-sm">
-                        View Details
-                    </a>
+            <div class="customer-order-actions">
 
-                    {% if order.status == 'Pending' %}
+                <a href="/order_details/{{ order.id }}"
+                   class="btn btn-primary">
+                    View Details
+                </a>
 
-                    <a href="/confirm_order/{{ order.id }}" class="btn btn-success btn-sm">
-                        Confirm
-                    </a>
+                {% if order.status == 'Pending' %}
 
-                    <a href="/cancel_order/{{ order.id }}" class="btn btn-danger btn-sm">
-                        Cancel
-                    </a>
+                <button
+                    class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmModal{{ order.id }}">
+                    Confirm
+                </button>
 
-                    {% endif %}
+                <button
+                    class="btn btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cancelModal{{ order.id }}">
+                    Cancel
+                </button>
 
-                    {% if order.status == 'Confirmed' %}
+                {% endif %}
 
-                    <a href="/deliver_order/{{ order.id }}" class="btn btn-primary btn-sm">
-                        Deliver
-                    </a>
+                {% if order.status == 'Confirmed' %}
 
-                    {% endif %}
+                <button
+                    class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deliverModal{{ order.id }}">
+                    Deliver
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% if order.status == 'Pending' %}
+
+        <div class="modal fade"
+             id="confirmModal{{ order.id }}"
+             tabindex="-1">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Confirm Order
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+                        Confirm Order #{{ order.id }}?
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            No
+                        </button>
+
+                        <a href="/confirm_order/{{ order.id }}"
+                           class="btn btn-success">
+                            Yes, Confirm
+                        </a>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+
+        <div class="modal fade"
+             id="cancelModal{{ order.id }}"
+             tabindex="-1">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Cancel Order
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+                        Cancel Order #{{ order.id }}?
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            No
+                        </button>
+
+                        <a href="/cancel_order/{{ order.id }}"
+                           class="btn btn-danger">
+                            Yes, Cancel
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        {% if order.status == 'Confirmed' %}
+
+        <div class="modal fade"
+             id="deliverModal{{ order.id }}"
+             tabindex="-1">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Deliver Order
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+                        Mark Order #{{ order.id }} as Delivered?
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            No
+                        </button>
+
+                        <a href="/deliver_order/{{ order.id }}"
+                           class="btn btn-success">
+                            Yes, Deliver
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
 
         {% endfor %}
 

@@ -8,9 +8,17 @@ class Customer(db.Model):
 
     name = db.Column(db.String(100), nullable=False)
 
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    shop_name = db.Column(db.String(150))
 
-    password = db.Column(db.String(100), nullable=False)
+    mobile = db.Column(db.String(20))
+
+    address = db.Column(db.Text)
+
+    city = db.Column(db.String(100))
+
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    
+    password = db.Column(db.String(200), nullable=False)
 
 class Product(db.Model):
 

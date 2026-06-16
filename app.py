@@ -345,7 +345,6 @@ def place_order():
         db.session.delete(item)
 
     db.session.commit()
-
     return redirect('/my_orders')
 
 @app.route('/my_orders')
@@ -475,9 +474,14 @@ def edit_order(order_id):
 
     customer_id = session['customer_id']
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if order.customer_id != customer_id:
+        flash('Unauthorized access.', 'danger')
+        return redirect('/my_orders')
+
+    if order.status != 'Pending':
+        flash('Only pending orders can be edited.', 'warning')
         return redirect('/my_orders')
 
     order_items = OrderItem.query.filter_by(
@@ -485,21 +489,35 @@ def edit_order(order_id):
     ).all()
 
     order_data = []
+    total = 0
+    total_items = 0
 
     for item in order_items:
 
         product = Product.query.get(item.product_id)
 
+        if not product:
+            continue
+
+        subtotal = product.price * item.quantity
+
+        total += subtotal
+        total_items += item.quantity
+
         order_data.append({
             'product': product,
             'quantity': item.quantity,
-            'item_id': item.id
+            'item_id': item.id,
+            'subtotal': subtotal
         })
 
     return render_template(
         'edit_order.html',
+        order=order,
         order_id=order_id,
-        order_data=order_data
+        order_data=order_data,
+        total=total,
+        total_items=total_items
     )
 
 @app.route('/increase_order_quantity/<int:item_id>')
@@ -526,16 +544,30 @@ def increase_order_quantity(item_id):
 def decrease_order_quantity(item_id):
 
     customer_id = session['customer_id']
-    item = OrderItem.query.get(item_id)
+
+    item = OrderItem.query.get_or_404(item_id)
     order = Order.query.get(item.order_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
 
     if item.quantity > 1:
-        item.quantity -= 1
 
-    db.session.commit()
+        item.quantity -= 1
+        db.session.commit()
+
+    else:
+
+        total_items = OrderItem.query.filter_by(
+            order_id=order.id
+        ).count()
+
+        if total_items <= 1:
+
+            flash(
+                'An order must contain at least one item.',
+                'warning'
+            )
 
     return redirect(f'/edit_order/{item.order_id}')
 
@@ -544,27 +576,34 @@ def remove_order_item(item_id):
 
     customer_id = session['customer_id']
 
-    item = OrderItem.query.get(item_id)
-    order_id = item.order_id
+    item = OrderItem.query.get_or_404(item_id)
     order = Order.query.get(item.order_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
 
+    remaining_items = OrderItem.query.filter_by(
+        order_id=order.id
+    ).count()
+
+    if remaining_items <= 1:
+
+        flash(
+            'Order must contain at least one item.',
+            'warning'
+        )
+
+        return redirect(f'/edit_order/{order.id}')
+
     db.session.delete(item)
     db.session.commit()
 
-    remaining_items = OrderItem.query.filter_by(
-    order_id=order_id
-    ).all()
+    flash(
+        'Item removed successfully.',
+        'success'
+    )
 
-    if len(remaining_items) == 0 :
-        order = Order.query.get(order_id)
-        order.status = 'Cancelled'
-
-    db.session.commit()
-
-    return redirect(f'/edit_order/{order_id}')
+    return redirect(f'/edit_order/{order.id}')
 
 @app.route('/add_product_to_order/<int:order_id>')
 def add_product_to_order(order_id):
