@@ -7,13 +7,8 @@ Customer Dashboard
 {% block content %}
 
 <div class="customer-hero">
-
     <h1>Welcome, {{ customer.name }}</h1>
-
-    <p class="hero-subtitle">
-        Manage your orders, cart and products from one place.
-    </p>
-
+    <p class="hero-subtitle">Manage your orders, cart and products from one place.</p>
 </div>
 
 <div class="stats-grid">
@@ -47,46 +42,32 @@ Customer Dashboard
 <div class="dashboard-features">
 
     <div class="dashboard-feature-card">
-
         <div class="feature-icon">📦</div>
-
-        <h3>Products</h3>
-
-        <p>Browse available products.</p>
-
-        <a href="/products" class="btn btn-primary">
-            View Products
-        </a>
-
+        <div class="feature-text">
+            <h3>Products</h3>
+            <p>Browse available products.</p>
+        </div>
+        <a href="/products" class="btn btn-primary">View</a>
     </div>
 
     <div class="dashboard-feature-card">
-
         <div class="feature-icon">🛒</div>
-
-        <h3>Cart</h3>
-
-        <p>Manage selected products.</p>
-
-        <a href="/cart" class="btn btn-primary">
-            Open Cart
-        </a>
-
+        <div class="feature-text">
+            <h3>Cart</h3>
+            <p>Manage selected products.</p>
+        </div>
+        <a href="/cart" class="btn btn-primary">Open</a>
     </div>
 
     <div class="dashboard-feature-card">
-
         <div class="feature-icon">📋</div>
-
-        <h3>Orders</h3>
-
-        <p>Track all placed orders.</p>
-
-        <a href="/my_orders" class="btn btn-primary">
-            View Orders
-        </a>
-
+        <div class="feature-text">
+            <h3>Orders</h3>
+            <p>Track all placed orders.</p>
+        </div>
+        <a href="/my_orders" class="btn btn-primary">View</a>
     </div>
 
 </div>
+
 {% endblock %}

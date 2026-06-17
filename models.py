@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 db = SQLAlchemy()
 
@@ -21,7 +23,6 @@ class Customer(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
 class Product(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(100), nullable=False)
@@ -48,11 +49,19 @@ class Cart(db.Model):
     quantity = db.Column(db.Integer)
 
 class Order(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
 
     customer_id = db.Column(db.Integer)
 
     status = db.Column(db.String(50))
+
+    created_at = db.Column(
+    db.DateTime,
+    default=lambda: datetime.now(
+        ZoneInfo("Asia/Kolkata")
+        )
+    )
 
 class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)

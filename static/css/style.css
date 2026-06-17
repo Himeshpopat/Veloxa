@@ -336,6 +336,108 @@ body {
     font-size: 1.1rem;
 }
 
+@media (max-width: 768px) {
+
+    .customer-hero {
+        padding: 20px 16px;
+        border-radius: 16px;
+        margin-top: 12px;
+        margin-bottom: 16px;
+    }
+
+    .customer-hero h1 {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        opacity: 0.85;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .stat-card {
+        padding: 14px 12px;
+        border-width: 2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 4px;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .stat-card h2 {
+        font-size: 1.6rem;
+        margin: 2px 0 0;
+        line-height: 1;
+    }
+
+    .stat-card p {
+        font-size: 0.78rem;
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    .dashboard-features {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .dashboard-feature-card {
+        padding: 16px;
+        border-width: 2px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .dashboard-feature-card .feature-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .dashboard-feature-card h3 {
+        font-size: 1rem;
+        margin: 0 0 2px;
+    }
+
+    .dashboard-feature-card p {
+        font-size: 0.82rem;
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    .dashboard-feature-card .btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+    .feature-icon {
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .recent-orders-section {
+        padding: 14px;
+    }
+}
+
 /* =========================
 PRODUCTS
 ========================= */
@@ -861,6 +963,11 @@ ORDER DETAILS
     font-size: 0.9rem;
 }
 
+.order-summary-boxes {
+    display: flex;
+    gap: 15px;
+}
+
 .order-total-value {
     font-size: 1.6rem;
     font-weight: 700;
@@ -966,6 +1073,47 @@ ORDER DETAILS
     color: #6c757d;
     font-size: 1rem;
     font-weight: 400;
+}
+
+.customer-info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.customer-info-title {
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.customer-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px 25px;
+}
+
+.customer-info-grid div {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 10px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+
+    .customer-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
 }
 
 /* =========================

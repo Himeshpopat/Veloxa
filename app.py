@@ -1,8 +1,20 @@
 from flask import Flask, render_template, request, session, redirect, flash
 from models import db, Customer, Product, Cart, Order, OrderItem, Admin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from flask_mail import Mail, Message
+import random
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'woms.proj@gmail.com'
+app.config['MAIL_PASSWORD'] = 'uybe hqwn ojzv ylnp'
+mail = Mail(app)
+
 app.secret_key = 'mysecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
@@ -34,21 +46,148 @@ def register():
     if request.method == 'POST':
 
         name = request.form['name']
+        shop_name = request.form['shop_name']
+        mobile = request.form['mobile']
+        city = request.form['city']
+        address = request.form['address']
         email = request.form['email']
         password = request.form['password']
 
+        existing_customer = Customer.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_customer:
+            flash('Email already registered')
+            return redirect('/register')
+
+        otp = str(random.randint(100000, 999999))
+
+        session['otp'] = otp
+        session['otp_time'] = datetime.now().isoformat()
+
+        session['registration_data'] = {
+            'name': name,
+            'shop_name': shop_name,
+            'mobile': mobile,
+            'city': city,
+            'address': address,
+            'email': email,
+            'password': password
+        }
+
+        msg = Message(
+            'WOMS Registration OTP',
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+
+        msg.body = f'''
+        Your OTP for WOMS Registration is:
+
+        {otp}
+
+        Do not share this OTP with anyone.
+        '''
+
+        mail.send(msg)
+
+        return render_template(
+            'register.html',
+            show_otp=True
+        )
+
+    return render_template(
+        'register.html',
+        show_otp=False
+    )
+
+@app.route('/verify_otp', methods=['POST'])
+def verify_otp():
+
+    entered_otp = request.form['otp']
+
+    otp_time = datetime.fromisoformat(
+    session['otp_time']
+    )
+
+    if datetime.now() - otp_time > timedelta(minutes=5):
+
+        session.pop('otp', None)
+        session.pop('otp_time', None)
+        session.pop('registration_data', None)
+
+        flash('OTP Expired. Please register again.')
+
+        return redirect('/register')
+
+    if entered_otp == session.get('otp'):
+
+        data = session['registration_data']
+
         customer = Customer(
-            name=name,
-            email=email,
-            password=generate_password_hash(password)
+            name=data['name'],
+            shop_name=data['shop_name'],
+            mobile=data['mobile'],
+            city=data['city'],
+            address=data['address'],
+            email=data['email'],
+            password=generate_password_hash(
+                data['password']
+            )
         )
 
         db.session.add(customer)
         db.session.commit()
 
-        return "Registration Successful"
+        session.pop('otp', None)
+        session.pop('registration_data', None)
 
-    return render_template('register.html')
+        flash('Registration Successful')
+        return redirect('/login')
+
+    flash('Invalid OTP')
+
+    return render_template(
+        'register.html',
+        show_otp=True
+    )
+
+@app.route('/resend_otp')
+def resend_otp():
+
+    if 'registration_data' not in session:
+        return redirect('/register')
+
+    otp = str(random.randint(100000, 999999))
+
+    session['otp'] = otp
+    session['otp_time'] = datetime.now().isoformat()
+
+    email = session['registration_data']['email']
+
+    msg = Message(
+        'WOMS Registration OTP',
+        sender=app.config['MAIL_USERNAME'],
+        recipients=[email]
+    )
+
+    msg.body = f'''
+Your OTP for WOMS Registration is:
+
+{otp}
+
+This OTP is valid for 5 minutes.
+'''
+
+    mail.send(msg)
+
+    flash('New OTP sent successfully.')
+
+    return render_template(
+        'register.html',
+        show_otp=True
+    )
 
 @app.route('/customers')
 def customers():
@@ -153,18 +292,21 @@ def add_product():
 
 @app.route('/products')
 def products():
+    if 'customer_id' not in session and 'admin_id' not in session:
+        return redirect('/login')
+
     order_id = request.args.get('order_id')
     search = request.args.get('search', '')
     
     if 'admin_id' in session:
         products = Product.query.filter(
-            Product.name.contains(search)
+            Product.name.ilike(f"%{search}%")
         ).all()
 
     else:
         products = Product.query.filter(
             Product.is_active == True,
-            Product.name.contains(search)
+            Product.name.ilike(f"%{search}%")
         ).all()
 
     admin_logged_in = 'admin_id' in session
@@ -354,7 +496,7 @@ def my_orders():
 
     orders = Order.query.filter_by(
         customer_id=customer_id
-    ).all()
+    ).order_by(Order.id.desc()).all()
 
     return render_template(
         'my_orders.html',
@@ -393,9 +535,13 @@ def order_details(order_id):
             'item_total': item_total
         })
 
+    customer = Customer.query.get(order.customer_id)
+
     return render_template(
         'order_details.html',
+        customer=customer,
         order_data=order_data,
+        order=order,
         total=total
     )
 
@@ -673,7 +819,7 @@ def admin_orders():
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    orders = Order.query.all()
+    orders = Order.query.order_by(Order.id.desc()).all()
 
     return render_template(
         'admin_orders.html',

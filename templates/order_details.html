@@ -11,66 +11,182 @@ Order Details
     <div class="order-details-header">
 
         <h2 class="order-page-title">
-            Order Details
-
+            Order Details:
             <span class="order-count">
                 ({{ order_data|length }} Items)
             </span>
         </h2>
 
-        <div class="order-total-box">
+        <div class="order-summary-boxes">
 
-            <span class="order-total-label">
-                Order Total
-            </span>
+            <div class="order-total-box">
 
-            <span class="order-total-value">
-                ₹{{ "%.2f"|format(total) }}
-            </span>
+                <span class="order-total-label">
+                    Placed On:
+                </span>
 
-        </div>
+                <span class="order-total-value">
+                    {{ order.created_at.strftime('%d-%m-%Y') }}
+                </span>
 
-    </div>
+            </div>
 
-    <div class="order-items-grid">
+            <div class="order-total-box">
 
-        {% for item in order_data %}
+                <span class="order-total-label">
+                    Order Total
+                </span>
 
-        <div class="order-item-card">
-
-            <img src="/static/product_images/{{ item.product.image }}" class="order-item-image">
-
-            <div class="order-item-details">
-
-                <h5>
-                    {{ item.product.name }}
-                </h5>
-
-                <p class="order-price">
-                    Wholesale Price:
-                    ₹{{ "%.2f"|format(item.product.price) }}
-                </p>
-
-                <div class="order-meta">
-
-                    <span class="qty-badge">
-                        Qty: {{ item.quantity }}
-                    </span>
-
-                    <span class="subtotal-badge">
-                        Subtotal:
-                        ₹{{ "%.2f"|format(item.item_total) }}
-                    </span>
-
-                </div>
+                <span class="order-total-value">
+                    ₹{{ "%.2f"|format(total) }}
+                </span>
 
             </div>
 
         </div>
 
-        {% endfor %}
+    </div>
+
+</div>
+
+{% if 'admin_id' in session %}
+
+<div class="customer-info-card">
+
+    <h4 class="customer-info-title">
+        Customer Details
+    </h4>
+
+    <div class="customer-info-grid">
+
+        <div>
+            <strong>Name:</strong>
+            {{ customer.name }}
+        </div>
+
+        <div>
+            <strong>Shop Name:</strong>
+            {{ customer.shop_name }}
+        </div>
+
+        <div>
+            <strong>Mobile No.:</strong>
+            {{ customer.mobile }}
+        </div>
+
+        <div>
+            <strong>City:</strong>
+            {{ customer.city }}
+        </div>
+
+        <div class="full-width">
+            <strong>Address:</strong>
+            {{ customer.address }}
+        </div>
+
+        <div class="full-width">
+            <strong>Email:</strong>
+            {{ customer.email }}
+        </div>
 
     </div>
+
+</div>
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in order_data %}
+
+                <tr>
+
+                    <td>
+                        {{ item.product.name }}
+                    </td>
+
+                    <td>
+                        {{ item.quantity }}
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(item.product.price) }}
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(item.item_total) }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="order-items-grid">
+
+    {% for item in order_data %}
+
+    <div class="order-item-card">
+
+        <img src="/static/product_images/{{ item.product.image }}" class="order-item-image">
+
+        <div class="order-item-details">
+
+            <h5>
+                {{ item.product.name }}
+            </h5>
+
+            <p class="order-price">
+                Wholesale Price:
+                ₹{{ "%.2f"|format(item.product.price) }}
+            </p>
+
+            <div class="order-meta">
+
+                <span class="qty-badge">
+                    Qty: {{ item.quantity }}
+                </span>
+
+                <span class="subtotal-badge">
+                    Subtotal:
+                    ₹{{ "%.2f"|format(item.item_total) }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
 
 </div>
 

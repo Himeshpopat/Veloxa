@@ -29,6 +29,10 @@ Admin Orders
                     Order #{{ order.id }}
                 </h5>
 
+                <small class="text-muted">
+                    {{ order.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+                </small>
+
                 {% if order.status == 'Pending' %}
 
                 <span class="order-status pending-status">
@@ -67,24 +71,17 @@ Admin Orders
 
             <div class="customer-order-actions">
 
-                <a href="/order_details/{{ order.id }}"
-                   class="btn btn-primary">
+                <a href="/order_details/{{ order.id }}" class="btn btn-primary">
                     View Details
                 </a>
 
                 {% if order.status == 'Pending' %}
 
-                <button
-                    class="btn btn-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#confirmModal{{ order.id }}">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ order.id }}">
                     Confirm
                 </button>
 
-                <button
-                    class="btn btn-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#cancelModal{{ order.id }}">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ order.id }}">
                     Cancel
                 </button>
 
@@ -92,10 +89,7 @@ Admin Orders
 
                 {% if order.status == 'Confirmed' %}
 
-                <button
-                    class="btn btn-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deliverModal{{ order.id }}">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#deliverModal{{ order.id }}">
                     Deliver
                 </button>
 
@@ -107,9 +101,7 @@ Admin Orders
 
         {% if order.status == 'Pending' %}
 
-        <div class="modal fade"
-             id="confirmModal{{ order.id }}"
-             tabindex="-1">
+        <div class="modal fade" id="confirmModal{{ order.id }}" tabindex="-1">
 
             <div class="modal-dialog modal-dialog-centered">
 
@@ -121,9 +113,7 @@ Admin Orders
                             Confirm Order
                         </h5>
 
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
                         </button>
 
                     </div>
@@ -134,14 +124,11 @@ Admin Orders
 
                     <div class="modal-footer">
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             No
                         </button>
 
-                        <a href="/confirm_order/{{ order.id }}"
-                           class="btn btn-success">
+                        <a href="/confirm_order/{{ order.id }}" class="btn btn-success">
                             Yes, Confirm
                         </a>
 
@@ -153,9 +140,7 @@ Admin Orders
 
         </div>
 
-        <div class="modal fade"
-             id="cancelModal{{ order.id }}"
-             tabindex="-1">
+        <div class="modal fade" id="cancelModal{{ order.id }}" tabindex="-1">
 
             <div class="modal-dialog modal-dialog-centered">
 
@@ -167,9 +152,7 @@ Admin Orders
                             Cancel Order
                         </h5>
 
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
                         </button>
 
                     </div>
@@ -180,14 +163,11 @@ Admin Orders
 
                     <div class="modal-footer">
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             No
                         </button>
 
-                        <a href="/cancel_order/{{ order.id }}"
-                           class="btn btn-danger">
+                        <a href="/cancel_order/{{ order.id }}" class="btn btn-danger">
                             Yes, Cancel
                         </a>
 
@@ -203,9 +183,7 @@ Admin Orders
 
         {% if order.status == 'Confirmed' %}
 
-        <div class="modal fade"
-             id="deliverModal{{ order.id }}"
-             tabindex="-1">
+        <div class="modal fade" id="deliverModal{{ order.id }}" tabindex="-1">
 
             <div class="modal-dialog modal-dialog-centered">
 
@@ -217,9 +195,7 @@ Admin Orders
                             Deliver Order
                         </h5>
 
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
                         </button>
 
                     </div>
@@ -230,14 +206,11 @@ Admin Orders
 
                     <div class="modal-footer">
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             No
                         </button>
 
-                        <a href="/deliver_order/{{ order.id }}"
-                           class="btn btn-success">
+                        <a href="/deliver_order/{{ order.id }}" class="btn btn-success">
                             Yes, Deliver
                         </a>
 

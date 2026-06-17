@@ -29,6 +29,10 @@ My Orders
                     Order #{{ order.id }}
                 </h5>
 
+                <small class="text-muted">
+                    {{ order.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+                </small>
+
                 {% if order.status == 'Pending' %}
 
                 <span class="order-status pending-status">
@@ -67,22 +71,17 @@ My Orders
 
             <div class="customer-order-actions">
 
-                <a href="/order_details/{{ order.id }}"
-                   class="btn btn-primary">
+                <a href="/order_details/{{ order.id }}" class="btn btn-primary">
                     View Details
                 </a>
 
                 {% if order.status == 'Pending' %}
 
-                <a href="/edit_order/{{ order.id }}"
-                   class="btn btn-success">
+                <a href="/edit_order/{{ order.id }}" class="btn btn-success">
                     Edit Order
                 </a>
 
-                <button
-                    class="btn btn-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#cancelModal{{ order.id }}">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ order.id }}">
                     Cancel
                 </button>
 
@@ -94,9 +93,7 @@ My Orders
 
         {% if order.status == 'Pending' %}
 
-        <div class="modal fade"
-             id="cancelModal{{ order.id }}"
-             tabindex="-1">
+        <div class="modal fade" id="cancelModal{{ order.id }}" tabindex="-1">
 
             <div class="modal-dialog modal-dialog-centered">
 
@@ -108,9 +105,7 @@ My Orders
                             Cancel Order
                         </h5>
 
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
                         </button>
 
                     </div>
@@ -124,14 +119,11 @@ My Orders
 
                     <div class="modal-footer">
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             No
                         </button>
 
-                        <a href="/customer_cancel_order/{{ order.id }}"
-                           class="btn btn-danger">
+                        <a href="/customer_cancel_order/{{ order.id }}" class="btn btn-danger">
                             Yes, Cancel
                         </a>
 
