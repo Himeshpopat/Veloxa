@@ -29,9 +29,6 @@ My Orders
                     Order #{{ order.id }}
                 </h5>
 
-                <small class="text-muted">
-                    {{ order.created_at.strftime('%d-%m-%Y %I:%M %p') }}
-                </small>
 
                 {% if order.status == 'Pending' %}
 

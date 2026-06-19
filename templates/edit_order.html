@@ -10,17 +10,12 @@ Edit Order
 
     <div class="edit-order-header">
 
-        <h2 class = "cart-heading">
+        <h2 class="edit-cart-heading">
             Edit Order
-
-            <span class="text-muted fs-5">
+            <span class="text-muted fs-6">
                 ({{ order_data|length }} items)
             </span>
         </h2>
-
-        <a href="/products?order_id={{ order_id }}" class="btn btn-primary">
-            Add Products
-        </a>
 
     </div>
 
@@ -72,6 +67,16 @@ Edit Order
     </div>
 
     {% endfor %}
+
+    <div class="add-products-section">
+
+        <a href="/products?order_id={{ order.id }}" class="btn btn-primary">
+            Add Products
+        </a>
+
+        <p>Browse more products here</p>
+
+    </div>
 
     <div class="cart-summary">
 

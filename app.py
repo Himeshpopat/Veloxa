@@ -471,6 +471,29 @@ def place_order():
     db.session.add(order)
     db.session.commit()
 
+    customer = Customer.query.get(customer_id)
+
+    msg = Message(
+        'New Order Received',
+        sender=app.config['MAIL_USERNAME'],
+        recipients=['popathimesh@gmail.com']
+    )
+
+    msg.body = f'''
+    New Order Received
+
+    Order ID: {order.id}
+
+    Customer: {customer.name}
+    Shop: {customer.shop_name}
+    Mobile: {customer.mobile}
+    City: {customer.city}
+
+    Please check the Order.
+    '''
+
+    mail.send(msg)
+
     for item in cart_items:
 
         order_item = OrderItem(
@@ -899,6 +922,32 @@ def admin_dashboard():
         return redirect('/admin_login')
 
     return render_template('admin_dashboard.html')
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+
+    customer = Customer.query.get(
+        session['customer_id']
+    )
+
+    if request.method == 'POST':
+
+        customer.name = request.form['name']
+        customer.shop_name = request.form['shop_name']
+        customer.mobile = request.form['mobile']
+        customer.city = request.form['city']
+        customer.address = request.form['address']
+
+        db.session.commit()
+
+        flash('Profile Updated Successfully')
+
+        return redirect('/profile')
+
+    return render_template(
+        'profile.html',
+        customer=customer
+    )
 
 @app.route('/create_admin')
 def create_admin():
