@@ -118,7 +118,7 @@ Cart
             </p>
 
             <p class="summary-total">
-                ₹{{ "%.2f"|format(total) }}
+                ₹{{ total|round|int }}
             </p>
 
         </div>

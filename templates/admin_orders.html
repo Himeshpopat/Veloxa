@@ -29,10 +29,6 @@ Admin Orders
                     Order #{{ order.id }}
                 </h5>
 
-                <small class="text-muted">
-                    {{ order.created_at.strftime('%d-%m-%Y %I:%M %p') }}
-                </small>
-
                 {% if order.status == 'Pending' %}
 
                 <span class="order-status pending-status">
@@ -61,15 +57,15 @@ Admin Orders
 
             </div>
 
-            <div class="customer-order-body">
+            <div class="admin-order-actions">
 
-                <p class="order-text">
-                    Customer ID: {{ order.customer_id }}
-                </p>
+                <div class="customer-order-body">
 
-            </div>
+                    <p class="order-text">
+                        Manage your customer's order
+                    </p>
 
-            <div class="customer-order-actions">
+                </div>
 
                 <a href="/order_details/{{ order.id }}" class="btn btn-primary">
                     View Details

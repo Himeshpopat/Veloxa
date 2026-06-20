@@ -2,6 +2,21 @@
 ADMIN DASHBOARD
 ========================= */
 
+.admin-hero {
+    background: linear-gradient(135deg, #0f172a, #1e40af);
+    color: white;
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.admin-hero h1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
 .dashboard-card {
     border: none;
     border-radius: 20px;
@@ -75,19 +90,66 @@ ADMIN DASHBOARD
     background: #f3efff;
 }
 
-@media (max-width: 768px) {
-    .customer-hero {
-        padding: 40px 20px;
+@media (max-width: 1000px) {
+
+    /* Admin Hero */
+
+    .admin-hero {
+        padding: 15px;
+        border-radius: 16px;
+        margin-top: -25px;
+        margin-bottom: -35px;
     }
 
-    .customer-hero h1 {
-        font-size: 2rem;
+    .admin-hero h1 {
+        font-size: 1.35rem;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+
+    .dashboard-cards .row {
+        --bs-gutter-x: 12px;
+        --bs-gutter-y: 12px;
     }
 
     .dashboard-icon {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        margin-bottom: 10px !important;
     }
 
+    .dashboard-card {
+        border-radius: 15px;
+        border: 3px solid #e9ecef;
+    }
+
+    .dashboard-card .card-body {
+        padding: 14px 10px;
+    }
+
+    .dashboard-card h5 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .dashboard-card p {
+        font-size: 0.75rem;
+        line-height: 1.4;
+        min-height: 42px;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-card .btn-danger {
+        width: auto;
+        display: inline-block;
+    }
+
+    .dashboard-card .btn {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+        margin-top: -4px;
+    }
 }
 
 /* Admin Orders */
@@ -157,6 +219,27 @@ ADMIN DASHBOARD
     color: #842029;
 }
 
+@media (max-width: 1000px) {
+    .admin-order-actions {
+        flex-direction: row;
+        gap: 6px;
+    }
+
+    .admin-order-actions {
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .admin-order-actions .btn {
+        flex: 0 1 auto;
+        width: auto;
+        padding: 7px 20px;
+        font-size: 0.75rem;
+        height: auto;
+        border-radius: 10px;
+    }
+}
+
 /* =========================
 NAVBAR
 ========================= */
@@ -174,6 +257,7 @@ NAVBAR
     font-weight: 700;
     color: #ffffff !important;
     letter-spacing: 1px;
+    margin-left: 7px;
 }
 
 .nav-btn {
@@ -396,7 +480,7 @@ body {
     .offcanvas .nav-btn {
         display: flex;
         align-items: center;
-        width: 100%;
+        width: auto;
         text-align: left;
         background: #f8f9fb;
         border: none;
@@ -404,8 +488,8 @@ body {
         padding: 12px 14px;
         margin-bottom: 8px;
         border-radius: 12px;
-        font-weight: 500;
-        font-size: 1.3rem;
+        font-weight: 600;
+        font-size: 1rem;
         text-decoration: none;
     }
 
@@ -438,7 +522,7 @@ body {
         padding: 15px;
         border-radius: 16px;
         margin-top: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 22px;
     }
 
     .customer-hero h1 {
@@ -607,21 +691,11 @@ PRODUCTS
 
 .product-card .card-title {
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #212529;
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.product-description {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -659,9 +733,9 @@ PRODUCTS
 
 .add-cart-btn {
     width: 100%;
-    margin-top: auto;
-    padding: 8px 14px;
-    border-radius: 10px;
+    margin-top: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
     font-weight: 600;
 }
 
@@ -716,7 +790,7 @@ PRODUCTS
 
 .product-image {
     width: calc(100% - 16px);
-    height: 220px;
+    height: 260px;
     margin: 8px 8px 0;
     border-radius: 14px;
     object-fit: cover;
@@ -739,12 +813,16 @@ MOBILE
     }
 
     .product-card .card-title {
-        font-size: 0.85rem;
-    }
+        font-size: 0.8rem;
+        line-height: 1.4;
+        font-weight: 600;
 
-    .product-description {
-        font-size: 0.65rem;
-        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
+        min-height: 42px;
     }
 
     .price-row {
@@ -765,10 +843,13 @@ MOBILE
 
     .add-cart-btn {
         font-size: 0.7rem;
-        padding: 5px 8px;
+        padding: 5px 18px;
     }
 
     .admin-actions {
+        margin-top: 8px;
+        margin-left: -2px;
+        margin-right: -2px;
         gap: 6px;
     }
 
@@ -835,8 +916,8 @@ CART
 }
 
 .cart-details h5 {
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
 .cart-price {
@@ -956,7 +1037,8 @@ CART
 @media (max-width: 1000px) {
     .cart-heading {
         font-weight: 600;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
+        margin-left: 3px;
     }
 
     .cart-card {
@@ -979,8 +1061,8 @@ CART
     }
 
     .cart-details h5 {
-        font-size: 0.9rem;
-        margin-bottom: 2px;
+        font-size: 0.8rem;
+        margin-bottom: 6px;
         line-height: 1.2;
     }
 
@@ -1158,9 +1240,10 @@ MY ORDERS
 @media (max-width: 1000px) {
 
     .orders-title {
-        font-weight: 600;
-        margin-bottom: 30px;
+        font-weight: 620;
+        margin-bottom: 24px;
         font-size: 1.4rem;
+        margin-left: 2px;
     }
 
     .customer-order-card {
@@ -1202,7 +1285,7 @@ MY ORDERS
 
     .customer-order-actions {
         flex-direction: row;
-        gap: 6px;
+        gap: 7px;
     }
 
     .customer-order-actions .btn {
@@ -1210,6 +1293,7 @@ MY ORDERS
         width: auto;
         padding: 7px 21px;
         font-size: 0.75rem;
+        height: auto;
     }
 
     .modal-footer {
@@ -1247,7 +1331,7 @@ ORDER DETAILS
 .order-total-label {
     display: block;
     color: #6c757d;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .order-summary-boxes {
@@ -1329,30 +1413,130 @@ ORDER DETAILS
     font-weight: 700;
 }
 
-@media (max-width: 768px) {
+.table {
+    margin-bottom: 3px;
+}
+
+@media (max-width: 1000px) {
 
     .order-items-grid {
         grid-template-columns: 1fr;
     }
 
     .order-item-card {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .order-meta {
-        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        padding: 10px;
+        min-height: 120px;
+        margin-top: -6px;
     }
 
     .order-item-image {
-        width: 150px;
-        height: 150px;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
     }
 
+    .order-item-details {
+        flex: 1;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .table {
+        margin-bottom: 3px;
+    }
+
+    .order-total-box {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .order-item-details h4,
+    .order-item-details h5 {
+        margin: 0 0 6px;
+        font-size: 0.85rem;
+        font-weight: 650;
+        line-height: 1.2;
+        margin-left: 10px;
+    }
+
+    .order-price {
+        font-size: 0.75rem;
+        font-weight: 650;
+        margin: 0 0 6px;
+        margin-left: 10px;
+    }
+
+    .order-meta {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
+        margin-left: 8px;
+        font-size: 0.75rem;
+    }
+
+    .qty-badge,
+    .subtotal-badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+        white-space: nowrap;
+    }
+
+    .customer-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .order-total-box {
+        background: white;
+        padding: 9px 12px;
+        border-radius: 15px;
+        margin-top: 4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .order-total-value {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .order-total-label {
+        display: block;
+        color: #6c757d;
+        font-size: 0.7rem;
+    }
+
+    .customer-info-grid div {
+        background: #f8f9fa;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .table td,
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
 }
 
 .order-page-title {
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 0;
 }
 
@@ -1389,18 +1573,6 @@ ORDER DETAILS
 
 .full-width {
     grid-column: 1 / -1;
-}
-
-@media (max-width: 768px) {
-
-    .customer-info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .full-width {
-        grid-column: auto;
-    }
-
 }
 
 /* =========================
@@ -1477,6 +1649,15 @@ ADD / EDIT PRODUCT
     border-radius: 20px;
 }
 
+.product-form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.product-form-actions .btn {
+    flex: 1;
+}
+
 .product-preview {
     width: 150px;
     height: 150px;
@@ -1492,6 +1673,25 @@ ADD / EDIT PRODUCT
 .add-product-card .btn {
     border-radius: 10px;
     font-weight: 600;
+}
+
+@media (max-width: 1000px) {
+
+    .product-form-actions {
+        flex-direction: row;
+    }
+
+    .product-form-actions .btn {
+        flex: 1;
+        white-space: nowrap;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .add-prod-header {
+        font-size: 1.4rem;
+        font-weight: 500;
+    }
 }
 
 /* =========================
@@ -1655,14 +1855,106 @@ HOME PAGE
     margin: 0;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1000px) {
+
+    .hero-section {
+        padding: 30px 0;
+    }
+
+    .hero-badge {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+        margin-bottom: 14px;
+    }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 1.9rem;
+        line-height: 1.25;
+        margin-bottom: 12px;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    .hero-buttons {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .hero-buttons .btn {
+        flex: 1;
+        width: auto;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .hero-stats {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .stat-box {
+        padding: 10px 16px;
+        border-radius: 12px;
+        flex: 1;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .stat-box {
+        padding: 10px 16px;
+        border-radius: 12px;
+        flex: 1;
+        text-align: center;
+    }
+
+    .stat-box h3 {
+        font-size: 1.1rem;
+    }
+
+    .stat-box p {
+        font-size: 0.75rem;
     }
 
     .hero-card {
-        margin-top: 0;
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    .hero-card h3 {
+        font-size: 1.15rem;
+    }
+
+    .feature-item {
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .feature-item span {
+        font-size: 1.2rem;
+    }
+
+    .feature-item h5 {
+        font-size: 0.95rem;
+        margin-bottom: 2px;
+    }
+
+    .feature-item p {
+        font-size: 0.8rem;
+    }
+
+    .hero-section .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .hero-title {
+        text-align: center;
     }
 
 }

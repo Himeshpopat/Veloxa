@@ -11,7 +11,7 @@ Order Details
     <div class="order-details-header">
 
         <h2 class="order-page-title">
-            Order Details:
+            Order Details
             <span class="order-count">
                 ({{ order_data|length }} Items)
             </span>
@@ -34,11 +34,11 @@ Order Details
             <div class="order-total-box">
 
                 <span class="order-total-label">
-                    Order Total
+                    Total:
                 </span>
 
                 <span class="order-total-value">
-                    ₹{{ "%.2f"|format(total) }}
+                    ₹{{ total|round|int }}
                 </span>
 
             </div>
@@ -54,7 +54,7 @@ Order Details
 <div class="customer-info-card">
 
     <h4 class="customer-info-title">
-        Customer Details
+        👤 Customer Details
     </h4>
 
     <div class="customer-info-grid">
