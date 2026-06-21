@@ -1137,8 +1137,8 @@ CART
     }
 
     .remove-btn {
-        padding: 4px 20px;
-        font-size: 0.6rem;
+        padding: 4px 18px;
+        font-size: 0.7rem;
     }
 
     .cart-summary {
@@ -1173,7 +1173,6 @@ CART
         width: fit-content;
         margin: 15px auto 0;
     }
-
 }
 
 /* =========================

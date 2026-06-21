@@ -2,20 +2,28 @@ from flask import Flask, render_template, request, session, redirect, flash
 from models import db, Customer, Product, Cart, Order, OrderItem, Admin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from werkzeug.utils import secure_filename
 from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import random
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'woms.proj@gmail.com'
-app.config['MAIL_PASSWORD'] = 'uybe hqwn ojzv ylnp'
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['ORDER_EMAIL_RECEIVER'] = os.getenv("ORDER_EMAIL_RECEIVER")
 mail = Mail(app)
 
-app.secret_key = 'mysecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 db.init_app(app)
@@ -36,7 +44,8 @@ def login():
         if customer and check_password_hash(customer.password,password):
             session['customer_id'] = customer.id
             return redirect('/dashboard')
-        return "Invalid Email or Password"
+        flash('Invalid Email or Password')
+        return redirect('/login')
 
     return render_template('login.html')
 
@@ -104,6 +113,9 @@ def register():
 
 @app.route('/verify_otp', methods=['POST'])
 def verify_otp():
+
+    if 'otp_time' not in session or 'otp' not in session or 'registration_data' not in session:
+        return redirect('/register')
 
     entered_otp = request.form['otp']
 
@@ -189,18 +201,6 @@ This OTP is valid for 5 minutes.
         show_otp=True
     )
 
-@app.route('/customers')
-def customers():
-
-    all_customers = Customer.query.all()
-
-    result = ""
-
-    for customer in all_customers:
-        result += f"{customer.name} - {customer.email}<br>"
-
-    return result
-
 @app.route('/dashboard')
 def dashboard():
 
@@ -248,7 +248,7 @@ def logout():
 
     session.pop('customer_id', None)
 
-    return render_template('login.html')
+    return redirect('/login')
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
@@ -262,11 +262,14 @@ def add_product():
         description = request.form['description']
 
         image = request.files['image']
-        image_name = image.filename
-        print(image_name)
-        print(type(image_name))
+
+        if image.filename == '':
+            flash('Please select an image.')
+            return redirect('/add_product')
+
+        image_name = secure_filename(image.filename)
+
         path = 'static/product_images/' + image_name
-        print(path)
 
         image.save(path)
 
@@ -318,29 +321,15 @@ def products():
         admin_logged_in=admin_logged_in
     )
 
-@app.route('/cart_test')
-def cart_test():
-
-    all_cart_items = Cart.query.all()
-
-    result = ""
-
-    for item in all_cart_items:
-
-        result += f"""
-        Customer ID: {item.customer_id}
-        Product ID: {item.product_id}
-        Quantity: {item.quantity}
-        <br><br>
-        """
-
-    return result
-
 @app.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
-    product = Product.query.get(product_id)
+
+    product = Product.query.get_or_404(product_id)
 
     cart_item = Cart.query.filter_by(
         customer_id=customer_id,
@@ -366,6 +355,9 @@ def add_to_cart(product_id):
 
 @app.route('/cart')
 def cart():
+
+    if 'customer_id' not in session:
+        return redirect('/login')
 
     customer_id = session['customer_id']
 
@@ -394,12 +386,18 @@ def cart():
 @app.route('/remove_from_cart/<int:product_id>')
 def remove_from_cart(product_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     cart_item = Cart.query.filter_by(
         customer_id=customer_id,
         product_id=product_id
     ).first()
+
+    if not cart_item:
+        return redirect('/cart')
 
     db.session.delete(cart_item)
     db.session.commit()
@@ -409,8 +407,11 @@ def remove_from_cart(product_id):
 @app.route('/increase_quantity/<int:product_id>')
 def increase_quantity(product_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
-    product = Product.query.get(product_id)
+    product = Product.query.get_or_404(product_id)
 
     cart_item = Cart.query.filter_by(
         customer_id=customer_id,
@@ -429,6 +430,9 @@ def increase_quantity(product_id):
 @app.route('/decrease_quantity/<int:product_id>')
 def decrease_quantity(product_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     cart_item = Cart.query.filter_by(
@@ -436,7 +440,13 @@ def decrease_quantity(product_id):
         product_id=product_id
     ).first()
 
-    cart_item.quantity -= 1
+    if not cart_item:
+        return redirect('/cart')
+
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+    else:
+        db.session.delete(cart_item)
 
     db.session.commit()
 
@@ -445,11 +455,18 @@ def decrease_quantity(product_id):
 @app.route('/place_order')
 def place_order():
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     cart_items = Cart.query.filter_by(
         customer_id=customer_id
     ).all()
+
+    if not cart_items:
+        flash('Cart is empty.')
+        return redirect('/cart')
 
     for item in cart_items:
 
@@ -476,7 +493,7 @@ def place_order():
     msg = Message(
         'New Order Received',
         sender=app.config['MAIL_USERNAME'],
-        recipients=['popathimesh@gmail.com']
+        recipients=[app.config['ORDER_EMAIL_RECEIVER']]
     )
 
     msg.body = f'''
@@ -515,6 +532,9 @@ def place_order():
 @app.route('/my_orders')
 def my_orders():
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     orders = Order.query.filter_by(
@@ -529,9 +549,12 @@ def my_orders():
 @app.route('/order_details/<int:order_id>')
 def order_details(order_id):
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if 'admin_id' not in session:
+
+        if 'customer_id' not in session:
+            return redirect('/login')
 
         customer_id = session['customer_id']
 
@@ -574,7 +597,7 @@ def confirm_order(order_id):
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if order.status == 'Pending':
         order_items = OrderItem.query.filter_by(
@@ -602,7 +625,7 @@ def cancel_order(order_id):
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if order.status == 'Pending':
         order.status = 'Cancelled'
@@ -616,7 +639,7 @@ def deliver_order(order_id):
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if order.status == 'Confirmed':
         order.status = 'Delivered'
@@ -628,9 +651,12 @@ def deliver_order(order_id):
 @app.route('/customer_cancel_order/<int:order_id>')
 def customer_cancel_order(order_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
-    order = Order.query.get(order_id)
+    order = Order.query.get_or_404(order_id)
 
     if order.customer_id == customer_id and order.status == 'Pending':
         order.status = 'Cancelled'
@@ -640,6 +666,9 @@ def customer_cancel_order(order_id):
 
 @app.route('/edit_order/<int:order_id>')
 def edit_order(order_id):
+
+    if 'customer_id' not in session:
+        return redirect('/login')
 
     customer_id = session['customer_id']
 
@@ -692,11 +721,14 @@ def edit_order(order_id):
 @app.route('/increase_order_quantity/<int:item_id>')
 def increase_order_quantity(item_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
-    item = OrderItem.query.get(item_id)
-    order = Order.query.get(item.order_id)
-    product = Product.query.get(item.product_id)
+    item = OrderItem.query.get_or_404(item_id)
+    order = Order.query.get_or_404(item.order_id)
+    product = Product.query.get_or_404(item.product_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
@@ -712,10 +744,13 @@ def increase_order_quantity(item_id):
 @app.route('/decrease_order_quantity/<int:item_id>')
 def decrease_order_quantity(item_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     item = OrderItem.query.get_or_404(item_id)
-    order = Order.query.get(item.order_id)
+    order = Order.query.get_or_404(item.order_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
@@ -731,10 +766,20 @@ def decrease_order_quantity(item_id):
             order_id=order.id
         ).count()
 
-        if total_items <= 1:
+        if total_items > 1:
+
+            db.session.delete(item)
+            db.session.commit()
 
             flash(
-                'An order must contain at least one item.',
+                'Item removed successfully.',
+                'success'
+            )
+
+        else:
+
+            flash(
+                'Order must contain at least one item.',
                 'warning'
             )
 
@@ -743,10 +788,13 @@ def decrease_order_quantity(item_id):
 @app.route('/remove_order_item/<int:item_id>')
 def remove_order_item(item_id):
 
+    if 'customer_id' not in session:
+        return redirect('/login')
+
     customer_id = session['customer_id']
 
     item = OrderItem.query.get_or_404(item_id)
-    order = Order.query.get(item.order_id)
+    order = Order.query.get_or_404(item.order_id)
 
     if order.customer_id != customer_id:
         return redirect('/my_orders')
@@ -777,7 +825,17 @@ def remove_order_item(item_id):
 @app.route('/add_product_to_order/<int:order_id>')
 def add_product_to_order(order_id):
 
-    products = Product.query.all()
+    if 'customer_id' not in session:
+        return redirect('/login')
+
+    order = Order.query.get_or_404(order_id)
+
+    if order.customer_id != session['customer_id']:
+        return redirect('/my_orders')
+
+    products = Product.query.filter_by(
+        is_active=True
+    ).all()
 
     return render_template(
         'products.html',
@@ -788,7 +846,15 @@ def add_product_to_order(order_id):
 @app.route('/add_to_order/<int:order_id>/<int:product_id>')
 def add_to_order(order_id, product_id):
 
-    product = Product.query.get(product_id)
+    if 'customer_id' not in session:
+        return redirect('/login')
+
+    order = Order.query.get_or_404(order_id)
+
+    if order.customer_id != session['customer_id']:
+        return redirect('/my_orders')
+
+    product = Product.query.get_or_404(product_id)
 
     item = OrderItem.query.filter_by(
         order_id=order_id,
@@ -796,19 +862,23 @@ def add_to_order(order_id, product_id):
     ).first()
 
     if item:
+
         if item.quantity < product.stock:
             item.quantity += 1
+
         else:
             flash(f'Only {product.stock} units available in stock.')
 
     else:
 
         if product.stock > 0:
+
             item = OrderItem(
                 order_id=order_id,
                 product_id=product_id,
                 quantity=1
             )
+
             db.session.add(item)
 
         else:
@@ -826,13 +896,19 @@ def admin_login():
         password = request.form['password']
 
         admin = Admin.query.filter_by(
-            username=username,
-            password=password
+            username=username
         ).first()
 
-        if admin:
+        if admin and check_password_hash(
+            admin.password,
+            password
+        ):
             session['admin_id'] = admin.id
             return redirect('/admin_dashboard')
+        
+        else:
+            flash('Invalid Username or Password')
+
 
     return render_template('admin_login.html')
 
@@ -862,7 +938,7 @@ def edit_product(product_id):
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    product = Product.query.get(product_id)
+    product = Product.query.get_or_404(product_id)
 
     if request.method == 'POST':
 
@@ -874,7 +950,7 @@ def edit_product(product_id):
 
         image = request.files['image']
         if image.filename != '':
-            image_name = image.filename
+            image_name = secure_filename(image.filename)
             image.save(
                 'static/product_images/' + image_name
             )
@@ -895,7 +971,7 @@ def delete_product(product_id):
     if 'admin_id' not in session:
         return redirect('/admin_login')
 
-    product = Product.query.get(product_id)
+    product = Product.query.get_or_404(product_id)
 
     product.is_active = False
     db.session.commit()
@@ -926,7 +1002,10 @@ def admin_dashboard():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
 
-    customer = Customer.query.get(
+    if 'customer_id' not in session:
+        return redirect('/login')
+
+    customer = Customer.query.get_or_404(
         session['customer_id']
     )
 
@@ -954,7 +1033,7 @@ def create_admin():
 
     admin = Admin(
         username='admin',
-        password='admin123'
+        password=generate_password_hash('admin123')
     )
 
     db.session.add(admin)
@@ -966,4 +1045,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
