@@ -97,48 +97,51 @@ Order Details
 
     <div class="card-body">
 
-        <table class="table table-bordered table-hover align-middle">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
 
-            <thead class="table-light">
 
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                </tr>
+                <thead class="table-light">
 
-            </thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
 
-            <tbody>
+                </thead>
 
-                {% for item in order_data %}
+                <tbody>
 
-                <tr>
+                    {% for item in order_data %}
 
-                    <td>
-                        {{ item.product.name }}
-                    </td>
+                    <tr>
 
-                    <td>
-                        {{ item.quantity }}
-                    </td>
+                        <td>
+                            {{ item.product.name }}
+                        </td>
 
-                    <td>
-                        ₹{{ "%.2f"|format(item.product.price) }}
-                    </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
 
-                    <td>
-                        ₹{{ "%.2f"|format(item.item_total) }}
-                    </td>
+                        <td>
+                            ₹{{ "%.2f"|format(item.product.price) }}
+                        </td>
 
-                </tr>
+                        <td>
+                            ₹{{ "%.2f"|format(item.item_total) }}
+                        </td>
 
-                {% endfor %}
+                    </tr>
 
-            </tbody>
+                    {% endfor %}
 
-        </table>
+                </tbody>
+
+            </table>
+        </div>
 
     </div>
 

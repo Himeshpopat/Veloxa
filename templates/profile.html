@@ -27,22 +27,28 @@ My Profile
                             <div class="col-md-6 mb-3">
 
                                 <label class="form-label">
-                                    Customer Name
+                                    👤 Customer Name
                                 </label>
 
-                                <input type="text" name="name" value="{{ customer.name }}" class="form-control"
-                                    required>
+                                <input type="text"
+                                       name="name"
+                                       value="{{ customer.name }}"
+                                       class="form-control"
+                                       required>
 
                             </div>
 
                             <div class="col-md-6 mb-3">
 
                                 <label class="form-label">
-                                    Shop Name
+                                    🏪 Shop Name
                                 </label>
 
-                                <input type="text" name="shop_name" value="{{ customer.shop_name }}"
-                                    class="form-control" required>
+                                <input type="text"
+                                       name="shop_name"
+                                       value="{{ customer.shop_name }}"
+                                       class="form-control"
+                                       required>
 
                             </div>
 
@@ -53,22 +59,28 @@ My Profile
                             <div class="col-md-6 mb-3">
 
                                 <label class="form-label">
-                                    Mobile Number
+                                    📞 Mobile Number
                                 </label>
 
-                                <input type="text" name="mobile" value="{{ customer.mobile }}" class="form-control"
-                                    required>
+                                <input type="text"
+                                       name="mobile"
+                                       value="{{ customer.mobile }}"
+                                       class="form-control"
+                                       required>
 
                             </div>
 
                             <div class="col-md-6 mb-3">
 
                                 <label class="form-label">
-                                    City
+                                    📍 City
                                 </label>
 
-                                <input type="text" name="city" value="{{ customer.city }}" class="form-control"
-                                    required>
+                                <input type="text"
+                                       name="city"
+                                       value="{{ customer.city }}"
+                                       class="form-control"
+                                       required>
 
                             </div>
 
@@ -77,41 +89,40 @@ My Profile
                         <div class="mb-3">
 
                             <label class="form-label">
-                                Address
+                                🏠 Address
                             </label>
 
-                            <textarea name="address" rows="3" class="form-control"
-                                required>{{ customer.address }}</textarea>
+                            <textarea name="address"
+                                      rows="3"
+                                      class="form-control"
+                                      required>{{ customer.address }}</textarea>
 
                         </div>
 
                         <div class="mb-3">
 
                             <label class="form-label">
-                                Email Address
+                                📧 Email Address
                             </label>
 
-                            <input type="email" value="{{ customer.email }}" class="form-control" readonly>
+                            <input type="email"
+                                   value="{{ customer.email }}"
+                                   class="form-control"
+                                   readonly>
 
                         </div>
 
-                        <div class="row mt-3">
+                        <div class="profile-actions mt-3">
 
-                            <div class="col-6">
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Update Profile
+                            </button>
 
-                                <button type="submit" class="btn btn-success w-100">
-                                    Update Profile
-                                </button>
-
-                            </div>
-
-                            <div class="col-6">
-
-                                <a href="/logout" class="btn btn-danger w-100">
-                                    Logout
-                                </a>
-
-                            </div>
+                            <a href="/logout"
+                               class="btn btn-danger">
+                                Logout
+                            </a>
 
                         </div>
 

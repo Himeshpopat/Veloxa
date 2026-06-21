@@ -90,7 +90,7 @@ ADMIN DASHBOARD
     background: #f3efff;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
 
     /* Admin Hero */
 
@@ -160,6 +160,21 @@ ADMIN DASHBOARD
     gap: 20px;
 }
 
+.admin-order-actions {
+    flex-direction: row;
+    gap: 15px;
+}
+
+.admin-order-actions .btn {
+    flex: 0 1 auto;
+    width: auto;
+    padding: 7px 15px;
+    font-size: 1rem;
+    height: auto;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
 .order-card {
     border: 1px solid #e9ecef;
     border-radius: 12px;
@@ -219,11 +234,7 @@ ADMIN DASHBOARD
     color: #842029;
 }
 
-@media (max-width: 1000px) {
-    .admin-order-actions {
-        flex-direction: row;
-        gap: 6px;
-    }
+@media (max-width: 768px) {
 
     .admin-order-actions {
         flex-direction: row;
@@ -233,10 +244,15 @@ ADMIN DASHBOARD
     .admin-order-actions .btn {
         flex: 0 1 auto;
         width: auto;
-        padding: 7px 20px;
+        padding: 7px 15px;
         font-size: 0.75rem;
         height: auto;
         border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .orders-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -423,7 +439,7 @@ body {
     font-size: 1.1rem;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
 
     .container {
         padding-left: 10px;
@@ -659,14 +675,22 @@ PRODUCTS
 }
 
 .product-image {
-    width: 100%;
-    height: 220px;
+    width: 220px;
+    height: 180px;
     object-fit: cover;
     transition: 0.3s;
 }
 
 .product-card:hover .product-image {
     transform: scale(1.05);
+}
+
+.product-stock {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #15803d;
+    margin: 1px;
+    margin-left: 0px;
 }
 
 .product-badge {
@@ -790,7 +814,7 @@ PRODUCTS
 
 .product-image {
     width: calc(100% - 16px);
-    height: 260px;
+    height: 290px;
     margin: 8px 8px 0;
     border-radius: 14px;
     object-fit: cover;
@@ -801,7 +825,14 @@ PRODUCTS
 MOBILE
 ========================= */
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
+    .product-stock {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #15803d;
+        margin: 1px;
+        margin-left: 0px;
+    }
 
     .product-image {
         height: 110px;
@@ -847,7 +878,7 @@ MOBILE
     }
 
     .admin-actions {
-        margin-top: 8px;
+        margin-top: -8px;
         margin-left: -2px;
         margin-right: -2px;
         gap: 6px;
@@ -1024,7 +1055,8 @@ CART
 .summary-heading {
     color: #6c757d;
     font-size: 0.95rem;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    margin-left: 4px;
 }
 
 .summary-total {
@@ -1034,7 +1066,7 @@ CART
     margin-bottom: 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
     .cart-heading {
         font-weight: 600;
         margin-bottom: 20px;
@@ -1187,7 +1219,7 @@ MY ORDERS
 
 .customer-order-header h5 {
     margin: 0;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .order-status {
@@ -1237,7 +1269,11 @@ MY ORDERS
     font-weight: 600;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
+    .orders-grid {
+        grid-template-columns: 1fr;
+        margin-top: 6px;
+    }
 
     .orders-title {
         font-weight: 620;
@@ -1273,27 +1309,16 @@ MY ORDERS
 
     .customer-order-actions {
         flex-direction: row;
-        gap: 6px;
-    }
-
-    .customer-order-actions .btn {
-        flex: 1;
-        width: auto;
-        padding: 6px 4px;
-        font-size: 0.7rem;
-    }
-
-    .customer-order-actions {
-        flex-direction: row;
-        gap: 7px;
+        gap: 5px;
     }
 
     .customer-order-actions .btn {
         flex: 0 1 auto;
         width: auto;
-        padding: 7px 21px;
+        padding: 7px 13px;
         font-size: 0.75rem;
         height: auto;
+        font-weight: 600;
     }
 
     .modal-footer {
@@ -1417,7 +1442,7 @@ ORDER DETAILS
     margin-bottom: 3px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
 
     .order-items-grid {
         grid-template-columns: 1fr;
@@ -1611,7 +1636,7 @@ EDIT ORDER
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
     .edit-cart-heading {
         font-size: 1.4rem;
         font-weight: 600;
@@ -1675,7 +1700,7 @@ ADD / EDIT PRODUCT
     font-weight: 600;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
 
     .product-form-actions {
         flex-direction: row;
@@ -1855,7 +1880,7 @@ HOME PAGE
     margin: 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
 
     .hero-section {
         padding: 30px 0;
@@ -1955,6 +1980,42 @@ HOME PAGE
 
     .hero-title {
         text-align: center;
+    }
+
+}
+
+/* Profile */
+
+.profile-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.profile-actions .btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.profile-actions .btn-danger,
+.profile-actions .btn-success {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+
+    .profile-actions {
+        gap: 12px;
+    }
+
+    .profile-actions .btn {
+        padding: 10px;
+        font-size: 0.8rem;
     }
 
 }

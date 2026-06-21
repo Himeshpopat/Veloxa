@@ -40,7 +40,8 @@ Products
 
             <div class="card product-card h-100">
 
-                <img src="/static/product_images/{{ product.image }}" class="card-img-top product-image" alt="{{ product.name }}">
+                <img src="/static/product_images/{{ product.image }}" class="card-img-top product-image"
+                    alt="{{ product.name }}">
 
                 <div class="card-body">
 
@@ -67,6 +68,12 @@ Products
                     </p>
 
                     {% if 'admin_id' in session %}
+
+                    <div class="product-stock">
+
+                        <p> Stock : {{ product.stock }} </p>
+
+                    </div>
 
                     <div class="admin-actions">
 

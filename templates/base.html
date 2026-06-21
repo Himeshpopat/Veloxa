@@ -30,17 +30,31 @@
 
                     {% if 'admin_id' in session %}
 
-                    <a href="/admin_dashboard" class="btn nav-btn">Dashboard</a>
+                    <a href="/admin_dashboard" class="btn nav-btn">
+                        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                    </a>
 
-                    <a href="/products" class="btn nav-btn">Products</a>
+                    <a href="/products" class="btn nav-btn">
+                        <i class="bi bi-box-seam me-2"></i>Products
+                    </a>
 
-                    <a href="/admin_orders" class="btn nav-btn">Orders</a>
+                    <a href="/admin_orders" class="btn nav-btn">
+                        <i class="bi bi-card-checklist me-2"></i>Orders
+                    </a>
 
-                    <a href="/add_product" class="btn nav-btn">Add Product</a>
+                    <a href="/add_product" class="btn nav-btn">
+                        <i class="bi bi-plus-circle me-2"></i>Add Product
+                    </a>
 
-                    <a href="/admin_logout" class="btn btn-danger">Logout</a>
+                    <a href="/admin_logout" class="btn btn-danger">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </a>
 
                     {% elif 'customer_id' in session %}
+
+                    <a href="/profile" class="btn nav-btn">
+                        <i class="bi bi-person-circle me-2"></i>My Profile
+                    </a>
 
                     <a href="/dashboard" class="btn nav-btn">
                         <i class="bi bi-speedometer2 me-2"></i>Dashboard
@@ -56,10 +70,6 @@
 
                     <a href="/my_orders" class="btn nav-btn">
                         <i class="bi bi-card-checklist me-2"></i>My Orders
-                    </a>
-
-                    <a href="/profile" class="btn nav-btn">
-                        <i class="bi bi-person-circle me-2"></i>My Profile
                     </a>
 
                     {% endif %}
@@ -92,35 +102,53 @@
 
                 {% if 'admin_id' in session %}
 
-                <a href="/admin_dashboard" class="btn nav-btn">Dashboard</a>
+                <a href="/admin_dashboard" class="btn nav-btn">
+                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
 
-                <a href="/products" class="btn nav-btn">Products</a>
+                <a href="/products" class="btn nav-btn">
+                    <i class="bi bi-box-seam me-2"></i>Products
+                </a>
 
-                <a href="/admin_orders" class="btn nav-btn">Orders</a>
+                <a href="/admin_orders" class="btn nav-btn">
+                    <i class="bi bi-card-checklist me-2"></i>Orders
+                </a>
 
-                <a href="/add_product" class="btn nav-btn">Add Product</a>
+                <a href="/add_product" class="btn nav-btn">
+                    <i class="bi bi-plus-circle me-2"></i>Add Product
+                </a>
 
                 <div class="mt-auto">
-                    <a href="/admin_logout" class="btn btn-danger w-100">
-                        Logout
+                    <a href="/admin_logout" class="btn btn-danger">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
                     </a>
                 </div>
 
                 {% elif 'customer_id' in session %}
 
-                <a href="/dashboard" class="btn nav-btn">Dashboard</a>
+                <a href="/profile" class="btn nav-btn">
+                    <i class="bi bi-person-circle me-2"></i>My Profile
+                </a>
 
-                <a href="/products" class="btn nav-btn">Products</a>
+                <a href="/dashboard" class="btn nav-btn">
+                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
 
-                <a href="/cart" class="btn nav-btn">Cart</a>
+                <a href="/products" class="btn nav-btn">
+                    <i class="bi bi-box-seam me-2"></i>Products
+                </a>
 
-                <a href="/my_orders" class="btn nav-btn">My Orders</a>
+                <a href="/cart" class="btn nav-btn">
+                    <i class="bi bi-cart3 me-2"></i>Cart
+                </a>
 
-                <a href="/profile" class="btn nav-btn">My Profile</a>
+                <a href="/my_orders" class="btn nav-btn">
+                    <i class="bi bi-card-checklist me-2"></i>My Orders
+                </a>
 
                 <div class="mt-auto">
                     <a href="/logout" class="btn btn-danger w-100">
-                        Logout
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
                     </a>
                 </div>
 
