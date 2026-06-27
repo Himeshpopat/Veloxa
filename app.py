@@ -54,7 +54,6 @@ UPLOAD_FOLDER = os.path.join('static', 'product_images')
 
 db.init_app(app)
 mail = Mail(app)
-csrf = CSRFProtect(app)
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -65,17 +64,9 @@ limiter = Limiter(
 
 @app.after_request
 def set_security_headers(response):
-    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
-    response.headers['Content-Security-Policy'] = (
-        "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline'; "
-        "style-src 'self' 'unsafe-inline'; "
-        "img-src 'self' data:; "
-        "font-src 'self';"
-    )
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
 @app.errorhandler(400)
@@ -95,19 +86,11 @@ def internal_error(e):
     logger.exception("Internal server error: %s", e)
     return render_template('errors/500.html'), 500
 
-@app.errorhandler(CSRFError)
-def csrf_error(e):
-    flash('Session expired or invalid request. Please try again.')
-    return redirect(request.referrer or '/'), 400
-
 def allowed_file(filename: str) -> bool:
     return (
         '.' in filename
         and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     )
-
-def valid_email(email: str) -> bool:
-    return bool(re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email))
 
 def safe_positive_float(value: str, field: str) -> float:
     """Parse a string to a positive float; abort(400) on failure."""
@@ -157,8 +140,8 @@ def login():
             flash('Email and password are required.')
             return redirect('/login')
 
-        if not valid_email(email):
-            flash('Invalid Email or Password')
+        if not email or not password:
+            flash('Invalid Email or Password', 'danger')
             return redirect('/login')
 
         customer = Customer.query.filter_by(email=email).first()
@@ -195,7 +178,7 @@ def register():
             flash('All fields are required.')
             return redirect('/register')
 
-        if not valid_email(email):
+        if not email(email):
             flash('Invalid email format.')
             return redirect('/register')
 
@@ -400,7 +383,9 @@ def add_product():
         db.session.commit()
 
         logger.info("Admin added product id=%s", product.id)
-        return "Product Added Successfully"
+
+        flash("Product added successfully.", "success")
+        return redirect('/products')
 
     return render_template('add_product.html')
 
@@ -525,7 +510,8 @@ def add_to_cart(product_id):
             db.session.add(cart_item)
 
     db.session.commit()
-    return redirect('/cart')
+    flash('Product added to cart.')
+    return redirect('/products')
 
 
 @app.route('/cart')
