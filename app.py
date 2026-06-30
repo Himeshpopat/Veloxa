@@ -1030,8 +1030,6 @@ def profile():
 
     return render_template('profile.html', customer=customer)
 
-    return 'Admin Created'
-
 with app.app_context():
     db.create_all()
 
