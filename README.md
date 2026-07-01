@@ -1,7 +1,13 @@
+<p align="center">
+  <img src="assets/Banner.png" alt="Veloxa Banner" width="100%">
+</p>
+
+<br>
+
 # 🚀 Veloxa — Velocity for Wholesale
 
 <p align="center">
-  <b>A Full-Stack B2B commerce platform that digitizes traditional wholesale ordering through secure authentication, inventory management, and automated order processing.</b>
+  <b>A full-stack B2B commerce platform that digitizes traditional wholesale ordering through secure authentication, inventory management, and automated order processing.</b>
 </p>
 
 <p align="center">
@@ -11,6 +17,8 @@
   <img src="https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white">
   <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white">
   <img src="https://img.shields.io/badge/Cloudinary-Image_Storage-3448C5">
+  <img src="https://img.shields.io/badge/Brevo-Email_API-0ABF53">
+  <img src="https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render">
   <img src="https://img.shields.io/badge/Flask--Limiter-Rate_Limiting-yellow">
   <img src="https://img.shields.io/badge/REST-API-green">
 </p>
@@ -283,4 +291,4 @@ If this project was useful to you, consider giving it a **star** — it helps ot
 
 ---
 
-> Built to turn a manual, error-prone wholesale ordering process into a secure, auditable digital workflow.
+> Built with ❤️ to modernize wholesale commerce through secure, scalable, and user-centric software.
