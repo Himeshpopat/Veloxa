@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/SQLAlchemy-ORM-D71F00?logo=sqlite&logoColor=white">
   <img src="https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white">
   <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white">
+  <img src="https://img.shields.io/badge/Cloudinary-Image_Storage-3448C5">
   <img src="https://img.shields.io/badge/Flask--Limiter-Rate_Limiting-yellow">
   <img src="https://img.shields.io/badge/REST-API-green">
 </p>
@@ -198,8 +199,8 @@ Veloxa/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/yourusername/Veloxa.git
-cd Veloxa
+git clone https://github.com/Himeshpopat/woms.git
+cd woms
 ```
 
 **2. Create and activate a virtual environment**
