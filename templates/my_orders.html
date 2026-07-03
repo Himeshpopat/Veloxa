@@ -84,6 +84,14 @@ My Orders
 
                 {% endif %}
 
+                {% if order.status in ['Confirmed', 'Delivered'] %}
+
+                <a href="/download_invoice/{{ order.id }}" class="btn btn-dark">
+                    Download Invoice
+                </a>
+
+                {% endif %}
+
             </div>
 
         </div>

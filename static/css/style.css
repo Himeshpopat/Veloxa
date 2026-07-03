@@ -146,8 +146,8 @@ ADMIN DASHBOARD
 .admin-order-actions .btn {
     flex: 0 1 auto;
     width: auto;
-    padding: 7px 15px;
-    font-size: 1rem;
+    padding: 7px 12px;
+    font-size: 0.9rem;
     height: auto;
     border-radius: 10px;
     font-weight: 600;
@@ -222,10 +222,10 @@ ADMIN DASHBOARD
     .admin-order-actions .btn {
         flex: 0 1 auto;
         width: auto;
-        padding: 7px 15px;
-        font-size: 0.75rem;
+        padding: 7px 10px;
+        font-size: 0.7rem;
         height: auto;
-        border-radius: 10px;
+        border-radius: 8px;
         font-weight: 600;
     }
 
@@ -1194,7 +1194,7 @@ MY ORDERS
 
 .customer-order-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
@@ -1252,7 +1252,7 @@ MY ORDERS
         padding: 7px 13px;
         font-size: 0.75rem;
         height: auto;
-        font-weight: 600;
+        font-weight: 650;
     }
 
     .modal-footer {

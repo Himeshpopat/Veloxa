@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, session, redirect, flash, abort
+from flask import Flask, render_template, request, session, redirect, flash, abort, send_file
 from models import db, Customer, Product, Cart, Order, OrderItem, Admin
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
 from flask_wtf.csrf import CSRFProtect, CSRFError
+from utils.invoice_generator import generate_invoice
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from datetime import datetime, timedelta
@@ -1030,8 +1031,44 @@ def profile():
 
     return render_template('profile.html', customer=customer)
 
+@app.route("/download_invoice/<int:order_id>")
+def download_invoice(order_id):
+    if "customer_id" not in session:
+        return redirect("/login")
+
+    order = Order.query.get_or_404(order_id)
+
+    if order.customer_id != session["customer_id"]:
+        abort(403)
+
+    pdf = generate_invoice(order)
+
+    return send_file(
+        pdf,
+        as_attachment=True,
+        download_name=f"Invoice_LG-{order.id:06d}.pdf",
+        mimetype="application/pdf",
+    )
+
+@app.route("/admin/download_invoice/<int:order_id>")
+def admin_download_invoice(order_id):
+
+    if 'admin_id' not in session:
+        return redirect('/admin_login')
+
+    order = Order.query.get_or_404(order_id)
+
+    pdf = generate_invoice(order)
+
+    return send_file(
+        pdf,
+        as_attachment=True,
+        download_name=f"Invoice_LG-{order.id:06d}.pdf",
+        mimetype="application/pdf",
+    )
+
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

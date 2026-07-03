@@ -19,6 +19,7 @@
   <img src="https://img.shields.io/badge/Cloudinary-Image_Storage-3448C5">
   <img src="https://img.shields.io/badge/Brevo-Email_API-0ABF53">
   <img src="https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render">
+  <img src="https://img.shields.io/badge/ReportLab-PDF_Generation-FF6F00">
   <img src="https://img.shields.io/badge/Flask--Limiter-Rate_Limiting-yellow">
   <img src="https://img.shields.io/badge/REST-API-green">
 </p>
@@ -38,6 +39,7 @@ Small and mid-sized wholesale businesses often rely on field representatives to 
 - 👥 100+ Registered Users
 - 👤 2 User Roles (Customer & Admin)
 - 🔄 3-Stage Order Workflow
+- 📄 Professional PDF Invoice Generation for Both Customers & Admins
 - ☁️ Cloud Integrations (Cloudinary & Brevo)
 - 📱 Responsive Desktop & Mobile UI
 - 🚀 Production Deployment on Render
@@ -68,6 +70,7 @@ Veloxa replaces manual order collection with a centralized digital platform, ena
 * Place orders directly from the cart, with **automatic admin email notification**
 * View complete order history and detailed order breakdowns
 * **Edit or cancel orders** while they remain in the `Pending` state — add products, change quantities, or remove line items
+* Download professionally formatted PDF invoices for every order
 * Manage shop profile (name, mobile, address, city)
 
 ### 🛠️ Admin Features
@@ -145,6 +148,7 @@ Customers can edit or cancel an order only while it is `Pending`. Once an admin 
 * 🛒 Full cart → checkout → order-lifecycle pipeline
 * 📧 Automated email notifications on new orders and OTPs
 * 🧾 Editable pending orders with per-item add/remove/adjust controls
+* 🧾 Professional PDF invoice generation for customers and administrators
 * 🗑️ Soft-delete/restore for products instead of destructive deletes
 * 📱 Responsive UI, verified on both desktop and mobile
 * 🧱 Clean route-level access control separating customer and admin sessions
@@ -239,7 +243,33 @@ CLOUDINARY_API_SECRET=your_api_secret
 SESSION_COOKIE_SECURE=false
 ```
 
-**5. Run the application**
+**5. Configure invoice settings**
+
+Open `invoice_generator.py` and replace the placeholder business information with your own details:
+
+- Company / Shop Name
+- Address
+- Contact Number
+- Email Address
+- Payment Terms (optional)
+
+Example:
+
+```python
+# Company Information
+"Admin's Shop Name"
+"Address Line 1"
+"Address Line 2"
+"Contact No.: XXXXXXXXXX"
+"Email: xyz@gmail.com"
+
+# Footer
+"Payment Due: X Days"
+```
+
+These values are displayed on every generated PDF invoice for both customers and administrators.
+
+**6. Run the application**
 ```bash
 python app.py
 ```
@@ -265,8 +295,6 @@ The app will be available at `http://127.0.0.1:5000`.
 * 🤖 AI-based Demand Forecasting
 * 📊 Sales Analytics Dashboard
 * 💳 Payment Gateway Integration
-* 📄 Automated Invoice Generation
-* 📤 Export Reports (Excel/PDF)
 * 🐳 Docker Deployment
 * 📱 Progressive Web App (PWA)
 * 🛡️ Complete CSRF Protection
