@@ -751,6 +751,10 @@ PRODUCTS
     text-decoration: none;
     text-align: center;
     flex: 1;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
 }
 
 .edit {
@@ -937,6 +941,10 @@ CART
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
 }
 
 .qty-value {
@@ -951,6 +959,9 @@ CART
     padding: 8px 16px;
     font-weight: 600;
     text-decoration: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
 }
 
 .cart-summary {
@@ -2359,4 +2370,10 @@ REGISTER PAGE
         border-radius: 10px;
     }
 
+}
+
+/* Lets small action forms (GET->POST conversions) sit inline inside
+   flex/grid layouts exactly as the <a> links they replaced did. */
+.inline-action-form {
+    display: contents;
 }

@@ -42,17 +42,23 @@ Cart
 
             <div class="quantity-box">
 
-                <a href="/decrease_quantity/{{ item.product.id }}" class="qty-btn">
-                    −
-                </a>
+                <form method="POST" action="/decrease_quantity/{{ item.product.id }}" class="inline-action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="qty-btn">
+                        −
+                    </button>
+                </form>
 
                 <span class="qty-value">
                     {{ item.quantity }}
                 </span>
 
-                <a href="/increase_quantity/{{ item.product.id }}" class="qty-btn">
-                    +
-                </a>
+                <form method="POST" action="/increase_quantity/{{ item.product.id }}" class="inline-action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="qty-btn">
+                        +
+                    </button>
+                </form>
 
             </div>
 
@@ -95,9 +101,12 @@ Cart
                         Cancel
                     </button>
 
-                    <a href="/remove_from_cart/{{ item.product.id }}" class="btn btn-danger">
-                        Remove
-                    </a>
+                    <form method="POST" action="/remove_from_cart/{{ item.product.id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger">
+                            Remove
+                        </button>
+                    </form>
 
                 </div>
 
@@ -180,9 +189,12 @@ Cart
                     Cancel
                 </button>
 
-                <a href="/place_order" class="btn btn-success">
-                    Place Order
-                </a>
+                <form method="POST" action="/place_order">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-success">
+                        Place Order
+                    </button>
+                </form>
 
             </div>
 

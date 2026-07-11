@@ -11,7 +11,7 @@ Products
     <h2 class="cart-heading">
         Products
         <span class="orders-count">
-            ({{ products|length }} items)
+            ({{ pagination.total if pagination else products|length }} items)
         </span>
     </h2>
 
@@ -83,15 +83,21 @@ Products
 
                         {% if product.is_active %}
 
-                        <a href="/delete_product/{{ product.id }}" class="delete prod">
-                            Delete
-                        </a>
+                        <form method="POST" action="/delete_product/{{ product.id }}" class="inline-action-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="delete prod">
+                                Delete
+                            </button>
+                        </form>
 
                         {% else %}
 
-                        <a href="/restore_product/{{ product.id }}" class="restore prod">
-                            Restore
-                        </a>
+                        <form method="POST" action="/restore_product/{{ product.id }}" class="inline-action-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="restore prod">
+                                Restore
+                            </button>
+                        </form>
 
                         {% endif %}
 
@@ -103,15 +109,21 @@ Products
 
                     {% if order_id %}
 
-                    <a href="/add_to_order/{{ order_id }}/{{ product.id }}" class="btn btn-primary add-cart-btn">
-                        Add To Order
-                    </a>
+                    <form method="POST" action="/add_to_order/{{ order_id }}/{{ product.id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary add-cart-btn">
+                            Add To Order
+                        </button>
+                    </form>
 
                     {% else %}
 
-                    <a href="/add_to_cart/{{ product.id }}" class="btn btn-primary add-cart-btn">
-                        Add To Cart
-                    </a>
+                    <form method="POST" action="/add_to_cart/{{ product.id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary add-cart-btn">
+                            Add To Cart
+                        </button>
+                    </form>
 
                     {% endif %}
 
@@ -126,6 +138,45 @@ Products
         {% endfor %}
 
     </div>
+
+    {% if pagination and pagination.pages > 1 %}
+
+    <nav aria-label="Products pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                <a class="page-link"
+                    href="{{ url_for('customer.products', page=pagination.prev_num, search=search, order_id=order_id) if pagination.has_prev else '#' }}">
+                    Previous
+                </a>
+            </li>
+
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link"
+                    href="{{ url_for('customer.products', page=page_num, search=search, order_id=order_id) }}">
+                    {{ page_num }}
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">…</span>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                <a class="page-link"
+                    href="{{ url_for('customer.products', page=pagination.next_num, search=search, order_id=order_id) if pagination.has_next else '#' }}">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    {% endif %}
 
     {% else %}
 

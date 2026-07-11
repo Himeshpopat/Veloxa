@@ -128,9 +128,12 @@ My Orders
                             No
                         </button>
 
-                        <a href="/customer_cancel_order/{{ order.id }}" class="btn btn-danger">
-                            Yes, Cancel
-                        </a>
+                        <form method="POST" action="/customer_cancel_order/{{ order.id }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger">
+                                Yes, Cancel
+                            </button>
+                        </form>
 
                     </div>
 

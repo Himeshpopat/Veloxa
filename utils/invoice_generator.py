@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from models import Customer, Product, OrderItem
+from routes.helpers import products_by_id
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -39,40 +40,6 @@ ROW_HEIGHT = 8 * mm
 SUMMARY_FOOTER_RESERVE = 55 * mm
 
 MAX_PRODUCT_NAME_LEN = 40
-
-
-# =========================================================
-# NUMBERED CANVAS (For Page X of Y pagination)
-# =========================================================
-class NumberedCanvas(canvas.Canvas):
-    """Canvas subclass to calculate total pages dynamically and draw 'Page X of Y'."""
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._saved_page_states = []
-
-    def showPage(self):
-        self._saved_page_states.append(dict(self.__dict__))
-        self._startPage()
-
-    def save(self):
-        num_pages = len(self._saved_page_states)
-        if self._pageNumber > num_pages:
-            self._saved_page_states.append(dict(self.__dict__))
-            num_pages += 1
-            
-        for state in self._saved_page_states:
-            self.__dict__.update(state)
-            self.draw_page_number(num_pages)
-            super().showPage()
-        super().save()
-
-    def draw_page_number(self, page_count):
-        self.saveState()
-        self.setFont("Helvetica", 8)
-        self.setFillGray(GREY_MID)
-        page_text = f"Page {self._pageNumber} of {page_count}"
-        self.drawCentredString(PAGE_WIDTH / 2.0, MARGIN - 6 * mm, page_text)
-        self.restoreState()
 
 
 # =========================================================
@@ -160,7 +127,7 @@ def draw_company_header(c, order):
 
     invoice_no = f"INV-{order.id:06d}"
     invoice_date = format_date(datetime.now(ZoneInfo("Asia/Kolkata")))
-    order_date = format_date(getattr(order, "order_date", None) or getattr(order, "created_at", None))
+    order_date = format_date(order.created_at)
 
     meta_rows = [
         ("Invoice No.:", invoice_no),
@@ -248,8 +215,7 @@ def draw_customer_box(c, customer, y_top):
                 .replace(" ,", ",")
                 .strip()
         )
-
-    c.drawString(x, y, f"Address: {clean_address}")
+        c.drawString(x, y, f"Address: {clean_address}")
 
     # City
     if city:
@@ -422,6 +388,7 @@ def generate_invoice(order):
 
     customer = Customer.query.get(order.customer_id)
     items = OrderItem.query.filter_by(order_id=order.id).all()
+    products = products_by_id(item.product_id for item in items)
 
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
@@ -446,7 +413,9 @@ def generate_invoice(order):
     sr = 1
 
     for index, item in enumerate(items):
-        product = Product.query.get(item.product_id)
+        product = products.get(item.product_id)
+        if not product:
+            continue
 
         qty = item.quantity
         rate = product.price

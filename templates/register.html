@@ -60,6 +60,7 @@
                         {% endwith %}
 
                         <form method="POST" action="/verify_otp">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                             <div class="text-center mb-4">
 
@@ -89,9 +90,12 @@
 
                             <div class="text-center mt-3">
 
-                                <a href="/resend_otp" class="text-decoration-none">
-                                    Resend OTP
-                                </a>
+                                <form method="POST" action="/resend_otp" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-link p-0 align-baseline text-decoration-none">
+                                        Resend OTP
+                                    </button>
+                                </form>
 
                             </div>
 
@@ -99,6 +103,7 @@
 
                         {% else %}
                         <form method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                             <div class="row">
 

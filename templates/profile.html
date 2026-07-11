@@ -20,7 +20,8 @@ My Profile
                         My Profile
                     </h2>
 
-                    <form method="POST">
+                    <form method="POST" id="profile-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                         <div class="row">
 
@@ -30,11 +31,8 @@ My Profile
                                     👤 Customer Name
                                 </label>
 
-                                <input type="text"
-                                       name="name"
-                                       value="{{ customer.name }}"
-                                       class="form-control"
-                                       required>
+                                <input type="text" name="name" value="{{ customer.name }}" class="form-control"
+                                    required>
 
                             </div>
 
@@ -44,11 +42,8 @@ My Profile
                                     🏪 Shop Name
                                 </label>
 
-                                <input type="text"
-                                       name="shop_name"
-                                       value="{{ customer.shop_name }}"
-                                       class="form-control"
-                                       required>
+                                <input type="text" name="shop_name" value="{{ customer.shop_name }}"
+                                    class="form-control" required>
 
                             </div>
 
@@ -62,11 +57,8 @@ My Profile
                                     📞 Mobile Number
                                 </label>
 
-                                <input type="text"
-                                       name="mobile"
-                                       value="{{ customer.mobile }}"
-                                       class="form-control"
-                                       required>
+                                <input type="text" name="mobile" value="{{ customer.mobile }}" class="form-control"
+                                    required>
 
                             </div>
 
@@ -76,11 +68,8 @@ My Profile
                                     📍 City
                                 </label>
 
-                                <input type="text"
-                                       name="city"
-                                       value="{{ customer.city }}"
-                                       class="form-control"
-                                       required>
+                                <input type="text" name="city" value="{{ customer.city }}" class="form-control"
+                                    required>
 
                             </div>
 
@@ -92,10 +81,8 @@ My Profile
                                 🏠 Address
                             </label>
 
-                            <textarea name="address"
-                                      rows="3"
-                                      class="form-control"
-                                      required>{{ customer.address }}</textarea>
+                            <textarea name="address" rows="3" class="form-control"
+                                required>{{ customer.address }}</textarea>
 
                         </div>
 
@@ -105,28 +92,26 @@ My Profile
                                 📧 Email Address
                             </label>
 
-                            <input type="email"
-                                   value="{{ customer.email }}"
-                                   class="form-control"
-                                   readonly>
-
-                        </div>
-
-                        <div class="profile-actions mt-3">
-
-                            <button type="submit"
-                                    class="btn btn-success">
-                                Update Profile
-                            </button>
-
-                            <a href="/logout"
-                               class="btn btn-danger">
-                                Logout
-                            </a>
+                            <input type="email" value="{{ customer.email }}" class="form-control" readonly>
 
                         </div>
 
                     </form>
+
+                    <div class="profile-actions mt-3">
+
+                        <button type="submit" form="profile-form" class="btn btn-success">
+                            Update Profile
+                        </button>
+
+                        <form method="POST" action="/logout" class="inline-action-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger">
+                                Logout
+                            </button>
+                        </form>
+
+                    </div>
 
                 </div>
 

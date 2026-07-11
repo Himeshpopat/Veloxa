@@ -133,9 +133,12 @@ Admin Dashboard
                             Securely sign out from the administrator account.
                         </p>
 
-                        <a href="/admin_logout" class="btn btn-danger px-4">
-                            Logout
-                        </a>
+                        <form method="POST" action="/admin_logout">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger px-4">
+                                Logout
+                            </button>
+                        </form>
 
                     </div>
 
