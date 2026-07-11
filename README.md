@@ -211,8 +211,8 @@ Veloxa/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/Himeshpopat/woms.git
-cd woms
+git clone https://github.com/Himeshpopat/Veloxa.git
+cd Veloxa
 ```
 
 **2. Create and activate a virtual environment**

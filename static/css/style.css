@@ -955,8 +955,8 @@ CART
     background: #ffeaea;
     color: #dc3545;
     border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
+    border-radius: 10px;
+    padding: 5px 20px;
     font-weight: 600;
     text-decoration: none;
     font-family: inherit;
@@ -1310,7 +1310,7 @@ ORDER DETAILS
 }
 
 .order-total-value {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: 700;
 }
 
