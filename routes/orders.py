@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, request, session, redirect, flash, abort, current_app
-from flask_mail import Message
 
 from models import db, Customer, Product, Cart, Order, OrderItem
-from routes.extensions import mail
 from routes.helpers import require_customer, logger, products_by_id
+from utils.brevo_email import send_email
 
 orders_bp = Blueprint('orders', __name__)
 
@@ -35,12 +34,7 @@ def place_order():
 
     customer = Customer.query.get(customer_id)
 
-    msg = Message(
-        'New Order Received',
-        sender=current_app.config['MAIL_USERNAME'],
-        recipients=[current_app.config['ORDER_EMAIL_RECEIVER']]
-    )
-    msg.body = (
+    order_body = (
         f"New Order Received\n\n"
         f"Order ID: {order.id}\n\n"
         f"Customer: {customer.name}\n"
@@ -50,7 +44,11 @@ def place_order():
         f"Please check the Order."
     )
     try:
-        mail.send(msg)
+        send_email(
+            current_app.config['ORDER_EMAIL_RECEIVER'],
+            'New Order Received',
+            order_body
+        )
         logger.info("Order notification email sent successfully.")
     except Exception as e:
         logger.exception("Failed to send order notification email: %s", e)

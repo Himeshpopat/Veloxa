@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, flash, abort, send_file
-from werkzeug.utils import secure_filename
-import os
-
+from flask import Blueprint, render_template, request, redirect, flash, send_file
+import cloudinary.uploader
+import cloudinary.api
 from models import db, Product, Order, OrderItem
 from routes.helpers import require_admin, allowed_file, safe_positive_float, safe_positive_int, UPLOAD_FOLDER, logger, products_by_id
 from utils.invoice_generator import generate_invoice
@@ -48,26 +47,24 @@ def add_product():
             flash('Invalid file type. Allowed: png, jpg, jpeg, gif, webp.')
             return redirect('/add_product')
 
-        image_name = secure_filename(image.filename)
-        if not image_name:
-            flash('Invalid filename.')
-            return redirect('/add_product')
-
-        # Prevent path traversal
-        save_path = os.path.join(UPLOAD_FOLDER, image_name)
-        abs_upload = os.path.realpath(UPLOAD_FOLDER)
-        abs_save = os.path.realpath(save_path)
-        if not abs_save.startswith(abs_upload + os.sep):
-            abort(400)
-
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        image.save(save_path)
-
         mrp = safe_positive_float(request.form.get('mrp', ''), 'mrp')
         price = safe_positive_float(request.form.get('price', ''), 'price')
         stock = safe_positive_int(request.form.get('stock', ''), 'stock')
 
-        product = Product(name=name, image=image_name, mrp=mrp, price=price, stock=stock)
+        result = cloudinary.uploader.upload(
+            image,
+            folder="veloxa_products"
+        )
+
+        image_url = result["secure_url"]
+
+        product = Product(
+            name=name,
+            image=image_url,
+            mrp=mrp,
+            price=price,
+            stock=stock
+        )
         db.session.add(product)
         db.session.commit()
 
@@ -101,20 +98,12 @@ def edit_product(product_id):
                 flash('Invalid file type. Allowed: png, jpg, jpeg, gif, webp.')
                 return redirect(f'/edit_product/{product_id}')
 
-            image_name = secure_filename(image.filename)
-            if not image_name:
-                flash('Invalid filename.')
-                return redirect(f'/edit_product/{product_id}')
+            result = cloudinary.uploader.upload(
+                image,
+                folder="veloxa_products"
+            )
 
-            save_path = os.path.join(UPLOAD_FOLDER, image_name)
-            abs_upload = os.path.realpath(UPLOAD_FOLDER)
-            abs_save = os.path.realpath(save_path)
-            if not abs_save.startswith(abs_upload + os.sep):
-                abort(400)
-
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-            image.save(save_path)
-            product.image = image_name
+            product.image = result["secure_url"]           
 
         db.session.commit()
         logger.info("Admin updated product id=%s", product_id)

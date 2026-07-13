@@ -14,21 +14,43 @@
   <img src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white">
   <img src="https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white">
   <img src="https://img.shields.io/badge/SQLAlchemy-ORM-D71F00?logo=sqlite&logoColor=white">
-  <img src="https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white">
+  <img src="https://img.shields.io/badge/SQLite-Development-003B57?logo=sqlite&logoColor=white">
+  <img src="https://img.shields.io/badge/PostgreSQL-Production-336791?logo=postgresql&logoColor=white">
   <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white">
   <img src="https://img.shields.io/badge/Cloudinary-Image_Storage-3448C5">
   <img src="https://img.shields.io/badge/Brevo-Email_API-0ABF53">
   <img src="https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render">
   <img src="https://img.shields.io/badge/ReportLab-PDF_Generation-FF6F00">
   <img src="https://img.shields.io/badge/Flask--Limiter-Rate_Limiting-yellow">
-  <img src="https://img.shields.io/badge/REST-API-green">
 </p>
+
+---
+
+## 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Project at a Glance](#-project-at-a-glance)
+- [Motivation](#-motivation)
+- [Business Impact](#-business-impact)
+- [Features](#-features)
+- [Order Workflow](#-order-workflow)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#architecture)
+- [Key Highlights](#-key-highlights)
+- [Application Screenshots](#-application-screenshots)
+- [Project Demo](#-project-demo)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Security Features](#-security-features)
+- [Future Enhancements](#-future-enhancements)
+- [License](#-license)
+- [Author](#-author)
 
 ---
 
 ## 📖 Overview
 
-Small and mid-sized wholesale businesses often rely on field representatives to travel from shop to shop collecting orders manually from retailers. These orders are then communicated through phone calls, WhatsApp messages, or handwritten registers. While this traditional workflow has worked for years, it is time-consuming, difficult to scale, prone to communication errors and often results in inventory mismatches.
+Veloxa is a full-stack web application designed to modernize the traditional wholesale ordering process through a centralized B2B commerce platform. Small and mid-sized wholesale businesses often rely on field representatives to travel from shop to shop collecting orders manually from retailers. These orders are then communicated through phone calls, WhatsApp messages, or handwritten registers. While this traditional workflow has worked for years, it is time-consuming, difficult to scale, prone to communication errors and often results in inventory mismatches.
 
 **Veloxa** replaces this process with a centralized digital platform where retailers can independently browse products, place orders, and track purchases online, while administrators efficiently manage inventory, customers, and the complete order lifecycle from a single dashboard.
 
@@ -36,7 +58,7 @@ Small and mid-sized wholesale businesses often rely on field representatives to 
 
 ## 📊 Project at a Glance
 
-- 👥 100+ Registered Users
+- 👥 Supports 100+ Registered Customers
 - 👤 2 User Roles (Customer & Admin)
 - 🔄 3-Stage Order Workflow
 - 📄 Professional PDF Invoice Generation for Both Customers & Admins
@@ -60,28 +82,36 @@ Veloxa replaces manual order collection with a centralized digital platform, ena
 
 ## ✨ Features
 
+### 🔐 Authentication & Security
+
+- Email OTP verification during registration
+- Secure password hashing using Werkzeug
+- Session-based authentication
+- CSRF protection for all POST requests
+- Route-based rate limiting using Flask-Limiter
+- Session fixation protection
+
 ### 👤 Customer Features
 
-* Self-service registration with **email OTP verification** (6-digit code, 5-minute expiry, resend with rate limiting)
-* Secure login/logout with session regeneration on authentication
-* Personal dashboard — total, pending, and delivered order counts, cart count, and recent orders
-* Browse and **search the live product catalog**
-* Add to cart, adjust quantities, and remove items (bounded by live stock)
-* Place orders directly from the cart, with **automatic admin email notification**
-* View complete order history and detailed order breakdowns
-* **Edit or cancel orders** while they remain in the `Pending` state — add products, change quantities, or remove line items
-* Download professionally formatted PDF invoices for every order
-* Manage shop profile (name, mobile, address, city)
+- Register and log in securely
+- Browse and search products
+- Add products to cart
+- Modify cart quantities
+- Place wholesale orders
+- Edit or cancel pending orders
+- View complete order history
+- Download PDF invoices
+- Manage profile information
 
 ### 🛠️ Admin Features
 
-* Dedicated, session-isolated admin login
-* Admin dashboard and full order management view
-* Add, edit, **soft-delete, and restore** products (soft-deleted products stay in the database but disappear from the customer catalog)
-* Product image upload with file-type and path-safety validation
-* Search products from the admin panel
-* Move orders through their lifecycle: **Confirm → Deliver**, or **Cancel**
-* **Automatic stock deduction** on confirmation, with a stock-availability check that blocks confirmation if inventory has run out
+- Secure admin login
+- Dashboard with order overview
+- Add, edit, soft-delete and restore products
+- Manage customer orders
+- Confirm, cancel and deliver orders
+- Automatic stock deduction on order confirmation
+- Product search and pagination
 
 ---
 
@@ -114,30 +144,50 @@ Customers can edit or cancel an order only while it is `Pending`. Once an admin 
 
 ## 🛠 Tech Stack
 
-**Frontend**
-* HTML5, CSS3 (custom stylesheet)
-* Bootstrap 5.3 + Bootstrap Icons
-* Jinja2 templating
+| Category | Technologies |
+|-----------|--------------|
+| **Frontend** | HTML5, CSS3, Bootstrap 5, Jinja2 |
+| **Backend** | Python, Flask, SQLAlchemy |
+| **Database** | SQLite (Development), PostgreSQL (Production) |
+| **Authentication** | Session-Based Authentication, Email OTP |
+| **Email Service** | Brevo |
+| **Image Storage** | Cloudinary |
+| **PDF Generation** | ReportLab |
+| **Security** | Flask-WTF, Flask-Limiter, Werkzeug |
+| **Deployment** | Render |
 
-**Backend**
-* Python & Flask
-* Flask-SQLAlchemy (ORM)
-* Brevo REST API (email delivery)
-* Flask-Limiter (per-route rate limiting)
-* Flask-WTF (CSRF tooling)
-* python-dotenv (environment configuration)
+---
 
-**Database**
-* SQLite by default, with `DATABASE_URL` support for drop-in Postgres/MySQL in production
+## 🏗️ Architecture
 
-**Security**
-* Werkzeug password hashing
-* Role-Based Access Control (RBAC)
-* Server-side session authentication with session regeneration on login
-* HTTP-only, SameSite cookies with a configurable `Secure` flag
-* Security response headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`)
-* Rate limiting on login, registration, and OTP endpoints
-* Ownership checks on every order/cart action (a customer can never touch another customer's data)
+Veloxa follows a **modular Blueprint-based architecture** that separates authentication, customer operations, order management, and administration into independent modules.
+
+```text
+routes/
+├── auth.py          # Authentication & OTP
+├── customer.py      # Customer dashboard & profile
+├── orders.py        # Cart & order management
+├── admin.py         # Admin dashboard & product management
+├── helpers.py       # Shared helper functions
+└── extensions.py    # Flask extensions
+```
+
+This modular structure improves maintainability, readability, scalability, and reduces code duplication by keeping related functionality logically organized.
+
+---
+
+## 🗄️ Database Design
+
+Veloxa uses a relational database designed around the wholesale ordering workflow.
+
+| Model | Purpose |
+|-------|---------|
+| **Customer** | Stores customer account and shop information. |
+| **Admin** | Stores administrator login credentials. |
+| **Product** | Maintains product catalog, pricing, stock, and availability. |
+| **Cart** | Temporarily stores products before checkout. |
+| **Order** | Stores order details and current order status. |
+| **OrderItem** | Stores individual products associated with each order. |
 
 ---
 
@@ -152,10 +202,13 @@ Customers can edit or cancel an order only while it is `Pending`. Once an admin 
 * 🗑️ Soft-delete/restore for products instead of destructive deletes
 * 📱 Responsive UI, verified on both desktop and mobile
 * 🧱 Clean route-level access control separating customer and admin sessions
+* 🧩 Modular Blueprint-based Flask architecture
 
 ---
 
 ## 📸 Application Screenshots
+
+The following screenshots showcase the customer and administrator interfaces across desktop and mobile devices.
 
 ### Customer Experience
 
@@ -187,6 +240,8 @@ Customers can edit or cancel an order only while it is `Pending`. Once an admin 
 
 ## 🎥 Project Demo
 
+Watch a complete walkthrough of Veloxa showcasing customer registration, order placement, admin management, and the overall workflow.
+
 ▶️ **[Watch Demo Video](https://drive.google.com/file/d/1YtrFeUnOcULB42dMl4MQb3Z9Ywd7UxNh/view?usp=sharing)**
 
 ---
@@ -195,11 +250,23 @@ Customers can edit or cancel an order only while it is `Pending`. Once an admin 
 
 ```
 Veloxa/
+│
 ├── app.py
 ├── models.py
-├── templates/
+├── routes/
+│   ├── auth.py
+│   ├── customer.py
+│   ├── orders.py
+│   ├── admin.py
+│   ├── helpers.py
+│   └── extensions.py
+│
 ├── static/
+├── templates/
 ├── assets/
+├── utils/
+│   └── invoice_generator.py
+├── instance/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -236,16 +303,17 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 ```env
 SECRET_KEY=your_secret_key
+DATABASE_URL=your_postgresql_connection_string
 BREVO_API_KEY=your_brevo_api_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 SESSION_COOKIE_SECURE=false
 ```
 
 **5. Configure invoice settings**
 
-Open `invoice_generator.py` and replace the placeholder business information with your own details:
+Open `utils/invoice_generator.py` and replace the placeholder business information with your own details.
 
 - Company / Shop Name
 - Address
@@ -292,12 +360,19 @@ The app will be available at `http://127.0.0.1:5000`.
 
 ## 📈 Future Enhancements
 
-* 🤖 AI-based Demand Forecasting
-* 📊 Sales Analytics Dashboard
 * 💳 Payment Gateway Integration
-* 🐳 Docker Deployment
+* 📊 Sales Analytics Dashboard
+* 🐘 Full PostgreSQL Production Support
+* 🤖 AI-based Demand Forecasting
 * 📱 Progressive Web App (PWA)
-* 🛡️ Complete CSRF Protection
+
+---
+
+## 📄 License
+
+This project is developed for educational, portfolio, and learning purposes.
+
+You are welcome to explore the code, learn from it, and adapt it for personal or academic use.
 
 ---
 
@@ -305,11 +380,11 @@ The app will be available at `http://127.0.0.1:5000`.
 
 **Himesh Popat**
 
-📧 [himeshpopat2006@gmail.com](mailto:himeshpopat2006@gmail.com)
+📧 Email: [himeshpopat2006@gmail.com](mailto:himeshpopat2006@gmail.com)
 
-🔗 LinkedIn: [linkedin.com/in/himesh-popat](https://linkedin.com/in/himesh-popat)
+🔗 LinkedIn: https://linkedin.com/in/himesh-popat
 
-💻 GitHub: [github.com/Himeshpopat](https://github.com/Himeshpopat)
+💻 GitHub: https://github.com/Himeshpopat
 
 ---
 
@@ -319,4 +394,4 @@ If this project was useful to you, consider giving it a **star** — it helps ot
 
 ---
 
-> Built with ❤️ to modernize wholesale commerce through secure, scalable, and user-centric software.
+> Built using Flask, SQLAlchemy, and Bootstrap to simplify wholesale order management through a secure, scalable, and user-friendly web application.

@@ -1,14 +1,15 @@
-from flask import Blueprint, render_template, request, session, redirect, flash, current_app
+from flask import Blueprint, render_template, request, session, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_mail import Message
 from email_validator import validate_email, EmailNotValidError
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import random
 import re
 
+from utils.brevo_email import send_email
+
 from models import db, Customer, Admin
-from routes.extensions import mail, limiter
+from routes.extensions import limiter
 from routes.helpers import logger
 
 IST = ZoneInfo("Asia/Kolkata")
@@ -62,7 +63,10 @@ def register():
             return redirect('/register')
 
         try:
-            email = validate_email(email).email
+            email = validate_email(
+                email,
+                check_deliverability=False
+            ).email
         except EmailNotValidError:
             flash('Invalid email format.')
             return redirect('/register')
@@ -95,20 +99,21 @@ def register():
             'password': generate_password_hash(password)
         }
 
-        msg = Message(
-            'WOMS Registration OTP',
-            sender=current_app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
-        msg.body = (
-            "Your OTP for WOMS Registration is:\n\n"
-            f"{otp}\n\n"
-            "Do not share this OTP with anyone.\n"
-            "This OTP is valid for 5 minutes."
-        )
         try:
-            mail.send(msg)
+            send_email(
+                email,
+                "Veloxa Registration OTP",
+                f"""Your OTP for Veloxa Registration is:
+
+        {otp}
+
+        Do not share this OTP with anyone.
+
+        This OTP is valid for 5 minutes."""
+            )
+
             logger.info("Registration OTP sent to [redacted email].")
+
         except Exception as e:
             logger.exception("Failed to send registration OTP email: %s", e)
             flash("Unable to send OTP at the moment. Please try again later.")
@@ -180,19 +185,21 @@ def resend_otp():
 
     email = session['registration_data']['email']
 
-    msg = Message(
-        'WOMS Registration OTP',
-        sender=current_app.config['MAIL_USERNAME'],
-        recipients=[email]
-    )
-    msg.body = (
-        "Your OTP for WOMS Registration is:\n\n"
-        f"{otp}\n\n"
-        "This OTP is valid for 5 minutes."
-    )
     try:
-        mail.send(msg)
+        send_email(
+            email,
+            "Veloxa Registration OTP",
+            f"""Your OTP for Veloxa Registration is:
+
+    {otp}
+
+    Do not share this OTP with anyone.
+
+    This OTP is valid for 5 minutes."""
+        )
+
         logger.info("OTP resent to [redacted email].")
+
     except Exception as e:
         logger.exception("Failed to resend OTP email: %s", e)
         flash("Unable to resend OTP. Please try again later.")

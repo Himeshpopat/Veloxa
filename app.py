@@ -6,9 +6,11 @@ import os
 import logging
 
 from models import db
-from routes.extensions import mail, csrf, limiter
+from routes.extensions import csrf, limiter
 
 load_dotenv()
+
+import cloudinary_config
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,22 +31,21 @@ app.config['SESSION_COOKIE_SECURE'] = os.getenv("SESSION_COOKIE_SECURE", "false"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 
 # Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['ORDER_EMAIL_RECEIVER'] = os.getenv("ORDER_EMAIL_RECEIVER")
+app.config['BREVO_API_KEY'] = os.getenv("BREVO_API_KEY")
 
 # Database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    "DATABASE_URL", "sqlite:///database.db"
-)
+database_url = os.getenv("DATABASE_URL")
+
+if database_url:
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "sqlite:///database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
 db.init_app(app)
-mail.init_app(app)
 csrf.init_app(app)
 limiter.init_app(app)
 
@@ -103,6 +104,7 @@ def home():
 
 with app.app_context():
     db.create_all()
+
 
 if __name__ == '__main__':
     app.run(debug=False)
