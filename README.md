@@ -50,7 +50,7 @@
 
 ## 📖 Overview
 
-Veloxa is a full-stack web application designed to modernize the traditional wholesale ordering process through a centralized B2B commerce platform. Small and mid-sized wholesale businesses often rely on field representatives to travel from shop to shop collecting orders manually from retailers. These orders are then communicated through phone calls, WhatsApp messages, or handwritten registers. While this traditional workflow has worked for years, it is time-consuming, difficult to scale, prone to communication errors and often results in inventory mismatches.
+**Veloxa** is a full-stack web application designed to modernize the traditional wholesale ordering process through a centralized B2B commerce platform. Small and mid-sized wholesale businesses often rely on field representatives to travel from shop to shop collecting orders manually from retailers. These orders are then communicated through phone calls, WhatsApp messages, or handwritten registers. While this traditional workflow has worked for years, it is time-consuming, difficult to scale, prone to communication errors and often results in inventory mismatches.
 
 **Veloxa** replaces this process with a centralized digital platform where retailers can independently browse products, place orders, and track purchases online, while administrators efficiently manage inventory, customers, and the complete order lifecycle from a single dashboard.
 
@@ -70,7 +70,7 @@ Veloxa is a full-stack web application designed to modernize the traditional who
 
 ## 💡 Motivation
 
-Traditional wholesale distribution relies heavily on field agents who visit shops, manually note down orders, and relay them back to the office — a workflow that is slow, error-prone, and hard to audit. Veloxa digitizes that relationship: retailers place their own orders directly, admins process them from one screen, and every order carries a full, timestamped history instead of a slip of paper.
+Traditional wholesale distribution relies heavily on field agents who visit shops, manually note down orders, and relay them back to the office, a workflow that is slow, error-prone, and hard to audit. Veloxa digitizes that relationship: retailers place their own orders directly, admins process them from one screen, and every order carries a full, timestamped history instead of a slip of paper.
 
 ---
 
@@ -243,6 +243,14 @@ The following screenshots showcase the customer and administrator interfaces acr
 Watch a complete walkthrough of Veloxa showcasing customer registration, order placement, admin management, and the overall workflow.
 
 ▶️ **[Watch Demo Video](https://drive.google.com/file/d/1YtrFeUnOcULB42dMl4MQb3Z9Ywd7UxNh/view?usp=sharing)**
+
+---
+
+## 🌐 Live Demo
+
+Experience the deployed application here:
+
+🔗 **https://veloxa-kla4.onrender.com**
 
 ---
 
