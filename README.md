@@ -333,7 +333,7 @@ Example:
 
 ```python
 # Company Information
-"Admin's Shop Name"
+"Veloxa Admin"
 "Address Line 1"
 "Address Line 2"
 "Contact No.: XXXXXXXXXX"

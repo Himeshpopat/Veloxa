@@ -105,7 +105,7 @@ def draw_company_header(c, order):
     # ---- Left: company details ----
     c.setFont("Helvetica-Bold", 18)
     c.setFillGray(0)
-    c.drawString(MARGIN, top - 6 * mm, "Admin's Shop Name")
+    c.drawString(MARGIN, top - 6 * mm, "Veloxa Admin")
 
     c.setFont("Helvetica", 9)
     c.setFillGray(GREY_MID)

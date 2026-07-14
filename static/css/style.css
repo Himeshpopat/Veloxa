@@ -104,6 +104,17 @@ ADMIN DASHBOARD
         padding: 14px 10px;
     }
 
+    .dashboard-card .card-body {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .dashboard-card .card-body .btn,
+    .dashboard-card .card-body form {
+        margin-top: auto;
+    }
+
     .dashboard-card h5 {
         font-size: 0.95rem;
         font-weight: 700;
@@ -123,10 +134,13 @@ ADMIN DASHBOARD
     }
 
     .dashboard-card .btn {
-        padding: 6px 14px;
+        padding: 6px 2px;
         font-size: 0.85rem;
         border-radius: 10px;
         margin-top: -4px;
+        width: 100px;
+        font-weight: 600;
+        align-items: center;
     }
 }
 
@@ -806,16 +820,17 @@ MOBILE
     }
 
     .product-card .card-title {
-        font-size: 0.8rem;
-        line-height: 1.4;
+        font-size: 0.75rem;
+        line-height: 1.6;
         font-weight: 600;
 
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
 
         overflow: hidden;
-        min-height: 42px;
+        min-height: 57px;
+        margin-bottom: 3px;
     }
 
     .price-row {
@@ -2386,6 +2401,26 @@ REGISTER PAGE
         font-size: .95rem;
         margin-top: 14px;
         border-radius: 10px;
+    }
+
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-footer .btn-secondary {
+        width: 140px;
+        flex: 0 0 auto;
+    }
+
+    .modal-footer form {
+        flex: 1;
+        margin: 0;
+    }
+
+    .modal-footer form .btn {
+        width: 100%;
     }
 
 }

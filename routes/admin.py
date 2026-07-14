@@ -194,6 +194,6 @@ def admin_download_invoice(order_id):
     return send_file(
         pdf,
         as_attachment=True,
-        download_name=f"Invoice_LG-{order.id:06d}.pdf",
+        download_name=f"Invoice-{order.id:06d}.pdf",
         mimetype="application/pdf",
     )
