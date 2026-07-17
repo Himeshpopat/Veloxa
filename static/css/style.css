@@ -2430,3 +2430,27 @@ REGISTER PAGE
 .inline-action-form {
     display: contents;
 }
+
+@media (hover: none) {
+
+    .dashboard-card:hover,
+    .order-card:hover,
+    .nav-btn:hover,
+    .stat-card:hover,
+    .dashboard-feature-card:hover,
+    .offcanvas .nav-btn:hover,
+    .product-card:hover,
+    .product-card:hover .product-image,
+    .cart-card:hover,
+    .customer-order-card:hover,
+    .order-item-card:hover,
+    .home-hero-buttons .btn-primary:hover,
+    .home-hero-buttons .btn-outline-dark:hover,
+    .home-stat-box:hover,
+    .home-dashboard-card:hover,
+    .home-feature-item:hover,
+    .home-dashboard-card .btn-dark:hover {
+        transform: none !important;
+        transition: none !important;
+    }
+}
